@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"
+xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <th:block th:replace="layout/head"></th:block>
+    <script src="/assets/plugins/chart-js/Chart.min.js"></script>
+    <script src="/assets/js/theme/apple.min.js"></script>
+</head>
+<body class="pace-done">
+	<!-- begin #page-loader -->
+	<div id="page-loader" class="fade show">
+		<div class="material-loader">
+			<svg class="circular" viewBox="25 25 50 50">
+				<circle class="path" cx="50" cy="50" r="20" fill="none" stroke-width="2" stroke-miterlimit="10"></circle>
+			</svg>
+			<div class="message">Loading</div>
+		</div>
+	</div>
+	<!-- end #page-loader -->
+	
+	<!-- begin #page-container -->
+	<div id="page-container" class="fade page-sidebar-fixed page-header-fixed">
+		<!-- begin #header -->
+		<th:block th:replace="layout/top"></th:block>
+		<!-- end #header -->
+		<!-- begin #sidebar -->
+		<th:block th:replace="layout/left"></th:block>
+		<!-- end #sidebar -->
+		<!-- begin #content -->
+		<div id="content" class="content">
+			<div class="section-container section-with-top-border p-b-5">
+			    <!-- begin breadcrumb -->
+				<!-- <ol class="breadcrumb pull-right">
+					<li class="breadcrumb-item"><a href="javascript:;">Home</a></li>
+					<li class="breadcrumb-item active">Chart</li>
+				</ol> -->
+				<!-- end breadcrumb -->
+				<!-- begin page-header -->
+				<h1 class="page-header" th:text="#{title.sampleStatus}">Sample status</h1>
+				<!-- end page-header -->
+                <div class="row">
+	                <div class="col-lg-12">
+	                    <div class="panel p-20">
+	    					<div class="row m-b-5">
+								
+										
+								<label class="col-form-label">기간</label>
+								<div class="col-xs-push-0">
+									<input type="text" class="form-control width-80" data-parsley-required="true" id="startDate" placeholder="" autocomplete="off" />
+								</div>
+
+								<label class="col-form-label">~</label>
+								<div class="col-xs-push-0">
+									<input type="text" class="form-control width-80" data-parsley-required="true" id="endDate" placeholder="" autocomplete="off" />
+								</div>
+								<button onClick="chart();" class="btn btn-default m-l-10 m-b-5 width-60" id="btn_today">조회</button>
+								
+								
+								
+							</div>
+	                    </div>
+	                </div>
+	            </div>
+                <div class="row">
+                    
+                    <!-- begin col-4  chart: -->
+                    <div class="col-lg-6">
+                        <!-- begin panel -->
+                        <div class="panel p-20">
+							<div class="row m-b-15">
+								<div class="col-lg-6">
+									<h5 class="m-t-0" th:text="#{page.chart.sampleReceipt}">Sample receipt</h5>
+								</div>
+								<div class="col-lg-6 text-right">
+									<button onClick="downloadChart('chart1');" class="btn btn-xs btn-success m-l-20">.xlsx</button>
+								</div>
+							</div>
+                            <div>
+								<canvas id="bar-chart1" data-render="chart-js"></canvas>
+							</div>
+                        </div>
+                        <!-- end panel -->
+                    </div>
+                    <!-- end col-4 -->
+                    <!-- begin col-4 -->
+                    <div class="col-lg-6">
+                        <!-- begin panel -->
+                        <div class="panel p-20">
+							<div class="row m-b-15">
+								<div class="col-lg-6">
+									<h5 class="m-t-0" th:text="#{page.chart.experimentCompletion}">Experiment completion</h5>
+								</div>
+								<div class="col-lg-6 text-right">
+									<button onClick="downloadChart('chart2');" class="btn btn-xs btn-success m-l-20">.xlsx</button>
+								</div>
+							</div>
+                            <div>
+								<canvas id="bar-chart2" data-render="chart-js"></canvas>
+							</div>
+                        </div>
+                        <!-- end panel -->
+                    </div>
+                    <!-- end col-4 -->
+                </div>
+                <div class="row">
+                    
+                    <!-- end col-4 -->
+                    <!-- begin col-4 -->
+                    <div class="col-lg-6">
+                        <!-- begin panel -->
+                        <div class="panel p-20">
+							<div class="row m-b-15">
+								<div class="col-lg-6">
+									<h5 class="m-t-0" th:text="#{page.chart.completedAnalysisFileProvided}">Completed analysis file provided</h5>
+								</div>
+								<div class="col-lg-6 text-right">
+									<button onClick="downloadChart('chart3');" class="btn btn-xs btn-success m-l-20">.xlsx</button>
+								</div>
+							</div>
+                            <div>
+								<canvas id="bar-chart3" data-render="chart-js"></canvas>
+							</div>
+                        </div>
+                        <!-- end panel -->
+                    </div>
+                    <!-- end col-4 -->
+                    <!-- begin col-4 -->
+                    <div class="col-lg-6">
+                        <!-- begin panel -->
+                        <div class="panel p-20">
+							<div class="row m-b-15">
+								<div class="col-lg-6">
+									<h5 class="m-t-0" th:text="#{page.chart.sampleReceiptRate}">Sample Receipt Rate</h5>
+								</div>
+								<div class="col-lg-6 text-right">
+									<button onClick="downloadChart('chart4');" class="btn btn-xs btn-success m-l-20">.xlsx</button>
+								</div>
+							</div>
+                            <div>
+								<canvas id="bar-chart4" data-render="chart-js"></canvas>
+							</div>
+                        </div>
+                        <!-- end panel -->
+                    </div>
+                    <!-- end col-4 -->
+                </div>
+                <!-- end row -->
+                
+			</div>
+			<!-- end panel -->
+		</div>
+		
+		<!-- end #content -->
+		<!-- begin scroll to top btn -->
+		<!-- end scroll to top btn -->
+	</div>
+	<!-- end page container -->
+	
+	
+	<script th:inline="javascript">
+	/* <![CDATA[ */       
+	var token = $("meta[name='_csrf']").attr("content");
+	var header = $("meta[name='_csrf_header']").attr("content");
+
+	var g_chartData = [];
+	
+	var randomScalingFactor = function() { 
+		return Math.round(Math.random()*100)
+	};
+	//  시작
+	$(document).ready(function() {
+			
+		App.init();
+		
+		var today = moment();
+		var fdate = moment().subtract(2, 'month');
+
+		$('#startDate').datepicker({
+			autoclose : true,
+			format: "yyyy-mm",
+			language : "ko",
+			viewMode: "months", 
+			minViewMode: "months"
+		});
+		// $('#startDate').val(fdate);
+		$('#startDate').datepicker('setDate', fdate.format("YYYY-MM"));
+		
+		$('#endDate').datepicker({
+			autoclose : true,
+			format: "yyyy-mm",
+			language : "ko",
+			viewMode: "months", 
+			minViewMode: "months"
+		});
+		// $('#endDate').val(today);
+		$('#endDate').datepicker('setDate', today.format("YYYY-MM"));
+		
+		chart();
+	});
+	
+	function chart() {
+		if ($("#startDate").parsley().validate() != true) return;
+		if ($("#endDate").parsley().validate() != true) return;
+		
+	    $.ajax({
+			url : "/chart/get/statistics",
+			type : "GET",
+			data : {
+				start : $("#startDate").val(),
+				end : $("#endDate").val()
+			},
+			dataType : "json",
+			contentType : "application/json; charset=utf-8",
+			beforeSend : function(xhr) {
+				xhr.setRequestHeader(header, token);
+			},
+			success: function (data) {
+				g_chartData = data;
+				var ctx1 = document.getElementById('bar-chart1').getContext('2d');
+				var barChart1 = new Chart(ctx1, {
+					type: 'bar',
+					data: data.chart1,
+					options: {
+				        legend: {
+				        	position: 'right'
+				        },
+						scales: {
+							yAxes: [{
+								ticks: {
+									min: 0
+								}
+							}]
+						}
+				    }
+				});
+				var ctx2 = document.getElementById('bar-chart2').getContext('2d');
+				var barChart2 = new Chart(ctx2, {
+					type: 'bar',
+					data: data.chart2,
+					options: {
+				        legend: {
+				        	position: 'right'
+				        },
+						scales: {
+							yAxes: [{
+								ticks: {
+									min: 0
+								}
+							}]
+						}
+				    }
+				});
+				var ctx3 = document.getElementById('bar-chart3').getContext('2d');
+				var barChart3 = new Chart(ctx3, {
+					type: 'bar',
+					data: data.chart3,
+					options: {
+				        legend: {
+				        	position: 'right'
+				        },
+						scales: {
+							yAxes: [{
+								ticks: {
+									min: 0
+								}
+							}]
+						}
+				    }
+				});
+				var ctx4 = document.getElementById('bar-chart4').getContext('2d');
+				var barChart4 = new Chart(ctx4, {
+					type: 'pie',
+					data: data.chart4
+				});
+			},
+			error : function(data) {
+				
+			}
+		});
+	}
+	
+	function downloadChart(key) {
+		var excelDatas = [];
+
+		if (key == "chart4") {
+			var headers = ["Service", "Count"];
+			excelDatas.push(headers);
+
+			var rows = [];
+			for (var i = 0; i < g_chartData[key].labels.length; i++) {
+				var service = g_chartData[key].labels[i];
+				var count = g_chartData[key].datasets[0].data[i];
+				var row = [service, count];
+				rows.push(row);
+			}
+
+			excelDatas = excelDatas.concat(rows);
+
+		} else {
+			var headers = ["Service"];
+			headers = headers.concat(g_chartData[key].labels);
+			excelDatas.push(headers);
+	
+			var rows = [];
+			for (var i = 0; i < g_chartData[key].datasets.length; i++) {
+				var dataset = g_chartData[key].datasets[i];
+	
+				var row = [dataset.label];
+				row = row.concat(dataset.data);
+	
+				rows.push(row);
+			}
+			excelDatas = excelDatas.concat(rows);
+		}
+
+		// step 1. workbook 생성
+		var wb = XLSX.utils.book_new();
+		// step 2. 시트 만들기 
+		var newWorksheet = XLSX.utils.aoa_to_sheet(excelDatas);
+		// var newWorksheet = XLSX.utils.table_to_sheet(html);
+		// step 3. workbook에 새로만든 워크시트에 이름을 주고 붙인다.  
+		XLSX.utils.book_append_sheet(wb, newWorksheet, "sheet1");
+		// step 4. 엑셀 파일 만들기 
+		var wbout = XLSX.write(wb, {bookType:'xlsx',  type: 'binary'});
+		// step 5. 엑셀 파일 내보내기 
+		saveAs(new Blob([s2ab(wbout)], {type:"application/octet-stream"}), "Sample.xlsx");
+	}
+
+
+	/* ]]> */
+	</script>
+	
+</body>
+</html>

@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"
+xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <th:block th:replace="layout/head"></th:block>
+    <style>
+	
+	#table_form td, #table_form th {
+		padding: 2px 10px;
+		border: 0;
+	}
+	
+	</style>
+</head>
+<body class="pace-done">
+	<!-- begin #page-loader -->
+	<div id="page-loader" class="fade show">
+		<div class="material-loader">
+			<svg class="circular" viewBox="25 25 50 50">
+				<circle class="path" cx="50" cy="50" r="20" fill="none" stroke-width="2" stroke-miterlimit="10"></circle>
+			</svg>
+			<div class="message">Loading</div>
+		</div>
+	</div>
+	<!-- end #page-loader -->
+	
+	<!-- begin #page-container -->
+	<div id="page-container" class="fade page-sidebar-fixed page-header-fixed">
+		<!-- begin #header -->
+		<th:block th:replace="layout/top"></th:block>
+		<!-- end #header -->
+		<!-- begin #sidebar -->
+		<th:block th:replace="layout/left"></th:block>
+		<!-- end #sidebar -->
+		<th:block th:replace="popup/sample_detail"></th:block>
+		<!-- begin #content -->
+		<div id="content" class="content">
+			<!-- begin page header -->
+			<ol class="breadcrumb float-xl-right">
+				<li class="breadcrumb-item active">검체 목록</li>
+			</ol>
+			
+			<h1 id="page-header" class="page-header">검체 목록</h1>
+			
+			<div class="row">
+				<div class="col-xl-12">
+					
+					
+					<div class="panel panel-inverse">
+
+						<!-- begin panel-heading -->
+						
+						<!-- end panel-heading -->
+
+						<!-- begin panel-body -->
+						<div id="panel-body" class="panel-body">
+					
+							<div class="form-group row m-b-12">
+								<label class="col-form-label m-l-2">서비스</label>
+								<div class="col-xs-push-0">
+									<select class="form-control width-200" id="sel_bundle">
+										<option value>전체</option>
+										<option th:each="bnd : ${bundles}" th:value="${bnd.getId()}" th:text="${bnd.getName()}"></option>
+									</select>
+								</div>
+								<label class="col-form-label m-l-2">상태</label>
+								<div class="col-xs-push-0">
+									<select class="form-control width-200" id="sel_status">
+										<option selected value>전체</option>
+										<option value="S000_INPUT_REG" th:text="${statusCodes.get('S000_INPUT_REG')}"></option>
+										<option value="S020_INPUT_RCV" th:text="${statusCodes.get('S020_INPUT_RCV')}"></option>
+										<option value="S040_INPUT_APPROVE" th:text="${statusCodes.get('S040_INPUT_APPROVE')}"></option>
+										<option value="S200_EXP_READY" th:text="${statusCodes.get('S200_EXP_READY')}"></option>
+										<option value="S210_EXP_STEP1" th:text="${statusCodes.get('S210_EXP_STEP1')}"></option>
+										<option value="S220_EXP_STEP2" th:text="${statusCodes.get('S220_EXP_STEP2')}"></option>
+										<option value="S230_EXP_STEP3" th:text="${statusCodes.get('S230_EXP_STEP3')}"></option>
+										<option value="S400_ANLS_READY" th:text="${statusCodes.get('S400_ANLS_READY')}"></option>
+										<option value="S410_ANLS_RUNNING" th:text="${statusCodes.get('S410_ANLS_RUNNING')}"></option>
+										<option value="S420_ANLS_SUCC" th:text="${statusCodes.get('S420_ANLS_SUCC')}"></option>
+										<option value="S430_ANLS_FAIL" th:text="${statusCodes.get('S430_ANLS_FAIL')}"></option>
+										<option value="S440_ANLS_SUCC_CMPL" th:text="${statusCodes.get('S440_ANLS_SUCC_CMPL')}"></option>
+										<option value="S450_ANLS_FAIL_CMPL" th:text="${statusCodes.get('S450_ANLS_FAIL_CMPL')}"></option>
+										<option value="S460_ANLS_CMPL" th:text="${statusCodes.get('S460_ANLS_CMPL')}"></option>
+										<option value="S600_JDGM_APPROVE" th:text="${statusCodes.get('S600_JDGM_APPROVE')}"></option>
+										<option value="S700_OUTPUT_WAIT" th:text="${statusCodes.get('S700_OUTPUT_WAIT')}"></option>
+										<option value="S710_OUTPUT_CMPL" th:text="${statusCodes.get('S710_OUTPUT_CMPL')}"></option>
+										<option value="S800_RE_OUTPUT_WAIT" th:text="${statusCodes.get('S800_RE_OUTPUT_WAIT')}"></option>
+										<option value="S810_RE_OUTPUT_CMPL" th:text="${statusCodes.get('S810_RE_OUTPUT_CMPL')}"></option>
+										<option value="S900_OUTPUT_CMPL">이전 LIMS 데이터</option>
+									</select>
+								</div>
+								
+								<label class="col-form-label m-l-5">조회일자</label>
+								<div class="input-group" id="default-daterange"  style="width: auto; float: right; padding-left: 10px; min-width: 220px" >
+								    <input type="text" name="default-daterange" class="form-control" value="" placeholder="클릭하여 선택" readonly="readonly"/>
+								    <span class="input-group-append">
+								    	<span class="input-group-text"><i class="fa fa-calendar"></i></span>
+									</span>
+								</div>
+								<label class="col-form-label m-l-10">검색어</label>
+								<div class="col-xs-push-0">
+									
+								    <input type="text" id="keyword" class="form-control"/>
+								</div>
+								<div>
+									<button onClick="search();" class="btn btn-default m-l-10">조회</button>
+								</div>
+							</div>
+							<hr/>
+							<div id="_collect_grid">
+							</div>
+							<hr/>
+							<div class="form-group row m-b-12">
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			
+			
+			
+			<div class="panel panel-inverse">
+				<!-- begin panel-heading -->
+				
+				<!-- end panel-body -->
+			</div>
+			<!-- end panel -->
+		</div>
+		
+		<!-- end #content -->
+		<!-- begin scroll to top btn -->
+		<!-- end scroll to top btn -->
+	</div>
+	
+	<input type="hidden" name="startDate" id="startDate" value="" />
+	<input type="hidden" name="finishDate" id="finishDate" value="" />
+	<!-- end page container -->
+	
+	
+	<script th:inline="javascript">
+	/* <![CDATA[ */       
+	var g_statusCodeInfo = /*[[${statusCodes}]]*/ {};
+	var g_genotypingMethodCodeInfo = /*[[${genotypingMethodCodes}]]*/ {};
+
+	var tables = [];
+	var count;
+	
+	var token = $("meta[name='_csrf']").attr("content");
+	var header = $("meta[name='_csrf_header']").attr("content");
+	
+	//  시작
+	$(document).ready(function() {
+		App.init();
+		
+		TableManageDefault.init();
+		
+		UserTable.init('_collect_grid', true, [10, 50, 100, 200, 500] , [10, 50, 100, 200, 500], true);
+		
+		var startDate = moment().subtract(1, 'months');
+		var endDate = moment();
+
+		$('#default-daterange').daterangepicker({
+			opens: 'right',
+			format : 'YYYY/MM/DD',
+			separator: ' to ',
+			startDate: startDate,
+			endDate: endDate
+		}, function (start, end) {
+			
+			setDaterangepicker(start, end);
+		});
+		setDaterangepicker(startDate, endDate);
+		
+		rhDiv = '<div class="progress rounded-corner" style="height:20px;">';
+		rhDivAprv = '<div class="progress-bar bg-blue " style="width: 100%">';
+		rhDivNotAprv = '<div class="progress-bar bg-red " style="width: 100%">';
+		dateFormat = "MM-DD HH:mm";
+
+		UserTable.draw('_collect_grid', {
+			url : "/all/list",
+			type : "GET",
+			data : function() {
+				var param = {
+					bundleId : $("#sel_bundle").val(),
+					keyword : $("#keyword").val(),
+					sDate : $('#startDate').val() == "" || $('#startDate').val() == null ? "" : $('#startDate').val(),
+					fDate : $('#finishDate').val() == "" || $('#finishDate').val() == null ? "" : $('#finishDate').val()
+				};
+				return param;
+			},
+			dataType : "json",
+			contentType : "application/json; charset=utf-8",
+			beforeSend : function(xhr) {
+				xhr.setRequestHeader(header, token);
+			}
+		}, [
+			{
+				title : 'No', 
+				type : 'index',
+				headClassName : 'width-50',
+				bodyClassName : 'text-center'
+			}, {
+				title : '검사실ID', 
+				data : 'laboratoryId',
+				sorting : true
+			}, {
+				title : '서비스', 
+				data : 'bundle.name',
+				sorting : true
+			}, {
+				title : "Genotyping ID",
+				data : "genotypingId",
+				sorting : true
+			}, {
+				title : "Genotyping Method",
+				data : "genotypingMethodCode",
+				render : function(row, data, index) {
+					var value = "";
+					if (data != null && data.length > 0) {
+						value = g_genotypingMethodCodeInfo[data];
+					}
+					return value;
+				}
+			}, {
+				title : "Mapping No",
+				data : "mappingNo"
+			}, {
+				title : '상태', 
+				data : "statusCode",
+				render : function(row, data, index) {
+					var value = g_statusCodeInfo[data];
+					return value;
+				},
+				sorting : true
+			}, {
+				serverHeader : true,
+				sorting : true
+			}, {
+				title : '검체 채취일', 
+				data : 'collectedDate',
+				type : 'date',
+				sorting : true
+			}, {
+				title : '검체 수령일', 
+				data : 'receivedDate',
+				type : 'date',
+				sorting : true
+			}, {
+				title : '검체 종류', 
+				data : 'sampleType'
+			}, {
+				title : "최근수정일자",
+				data : "modifiedDate",
+				type : "date"
+			}, {
+				title : '검체 등록일자', 
+				data : 'createdDate',
+				type : 'date'
+			}, {
+				title : '등록자', 
+				data : 'createdMember.name'
+			}, {
+				title : '입고담당자', 
+				data : 'inputApproveMember.name',
+				bodyClassName : 'text-center',
+				render : function(row, data, index) {
+					var html = rhDiv;
+					html += data ? rhDivAprv
+						+ data + '</div>'
+						: rhDivNotAprv;
+					html += '</div></div>';
+					return html;
+				}
+			}, {
+				title : '입고승인일시', 
+				data : 'inputApproveDate',
+				type : 'date'
+			}, {
+				title : '중간관리자', 
+				data : 'inputMngApproveMember.name',
+				bodyClassName : 'text-center',
+				render : function(row, data, index) {
+					var html = rhDiv;
+					html += data ? rhDivAprv
+						+ data + '</div>'
+						: rhDivNotAprv;
+					html += '</div></div>';
+					return html;
+				}
+			}, {
+				title : '입고 중간관리자 승인일시', 
+				data : 'inputMngApproveDate',
+				type : 'date'
+			}, {
+				title : '입고 검사실책임자', 
+				data : 'inputDrctMember.name',
+				bodyClassName : 'text-center',
+				render : function(row, data, index) {
+					var html = rhDiv;
+					html += data ? rhDivAprv
+						+ data + '</div>'
+						: rhDivNotAprv;
+					html += '</div></div>';
+					return html;
+				}
+			}, {
+				title : '입고 검사실책임자 승인일시', 
+				data : 'inputDrctApproveDate',
+				type : 'date'
+			}, {
+				title : '실험 시작담당자', 
+				data : 'expStartMember.name',
+				bodyClassName : 'text-center',
+				render : function(row, data, index) {
+					var html = rhDiv;
+					html += data ? rhDivAprv
+						+ data + '</div>'
+						: rhDivNotAprv;
+					html += '</div></div>';
+					return html;
+				}
+			}, {
+				title : '실험시작일시', 
+				data : 'expStartDate',
+				type : 'date'
+			}, {
+				title : 'STEP1 담당자', 
+				data : 'expStep1Member.name',
+				bodyClassName : 'text-center',
+				render : function(row, data, index) {
+					var html = rhDiv;
+					html += data ? rhDivAprv
+						+ data + '</div>'
+						: rhDivNotAprv;
+					html += '</div></div>';
+					return html;
+				}
+			}, {
+				title : 'STEP1 완료일시', 
+				data : 'expStep1Date',
+				type : 'date'
+			}, {
+				title : 'STEP2 담당자', 
+				data : 'expStep2Member.name',
+				bodyClassName : 'text-center',
+				render : function(row, data, index) {
+					var html = rhDiv;
+					html += data ? rhDivAprv
+						+ data + '</div>'
+						: rhDivNotAprv;
+					html += '</div></div>';
+					return html;
+				}
+			}, {
+				title : 'STEP2 완료일시', 
+				data : 'expStep2Date',
+				type : 'date'
+			}, {
+				title : 'STEP3 담당자', 
+				data : 'expStep3Member.name',
+				bodyClassName : 'text-center',
+				render : function(row, data, index) {
+					var html = rhDiv;
+					html += data ? rhDivAprv
+						+ data + '</div>'
+						: rhDivNotAprv;
+					html += '</div></div>';
+					return html;
+				}
+			}, {
+				title : 'STEP3 완료일시', 
+				data : 'expStep3Date',
+				type : 'date'
+			}, {
+				title : '분석 시작담당자', 
+				data : 'anlsStartMember.name',
+				bodyClassName : 'text-center',
+				render : function(row, data, index) {
+					var html = rhDiv;
+					html += data ? rhDivAprv
+						+ data + '</div>'
+						: rhDivNotAprv;
+					html += '</div></div>';
+					return html;
+				}
+			}, {
+				title : '분석시작일시', 
+				data : 'anlsStartDate',
+				type : 'date'
+			}, {
+				title : '분석종료일시', 
+				data : 'anlsEndDate',
+				type : 'date'
+			}, {
+				title : '분석 완료담당자', 
+				data : 'anlsCmplMember.name',
+				bodyClassName : 'text-center',
+				render : function(row, data, index) {
+					var html = rhDiv;
+					html += data ? rhDivAprv
+						+ data + '</div>'
+						: rhDivNotAprv;
+					html += '</div></div>';
+					return html;
+				}
+			}, {
+				title : '분석완료일시', 
+				data : 'anlsCmplDate',
+				type : 'date'
+			}, {
+				title : '판정 검사담당자', 
+				data : 'jdgmApproveMember.name',
+				bodyClassName : 'text-center',
+				render : function(row, data, index) {
+					var html = rhDiv;
+					html += data ? rhDivAprv
+						+ data + '</div>'
+						: rhDivNotAprv;
+					html += '</div></div>';
+					return html;
+				}
+			}, {
+				title : '판정승인일시', 
+				data : 'jdgmApproveDate',
+				type : 'date'
+			}, {
+				title : '판정 중간관리자', 
+				data : 'jdgmMngApproveMember.name',
+				bodyClassName : 'text-center',
+				render : function(row, data, index) {
+					var html = rhDiv;
+					html += data ? rhDivAprv
+						+ data + '</div>'
+						: rhDivNotAprv;
+					html += '</div></div>';
+					return html;
+				}
+			}, {
+				title : '판정 중간관리자 승인일시', 
+				data : 'jdgmMngApproveDate',
+				type : 'date'
+			}, {
+				title : '판정 검사실책임자', 
+				data : 'jdgmDrctApproveMember.name',
+				bodyClassName : 'text-center',
+				render : function(row, data, index) {
+					var html = rhDiv;
+					html += data ? rhDivAprv
+						+ data + '</div>'
+						: rhDivNotAprv;
+					html += '</div></div>';
+					return html;
+				}
+			}, {
+				title : '판정 검사실책임자 승인일시', 
+				data : 'jdgmDrctApproveDate',
+				type : 'date'
+			}, {
+				title : '출고 담당자', 
+				data : 'outputWaitMember.name',
+				bodyClassName : 'text-center',
+				render : function(row, data, index) {
+					var html = rhDiv;
+					html += data ? rhDivAprv
+						+ data + '</div>'
+						: rhDivNotAprv;
+					html += '</div></div>';
+					return html;
+				}
+			}, {
+				title : '출고대기일시', 
+				data : 'outputWaitDate',
+				type : 'date'
+			}, {
+				title : '출고완료일시', 
+				data : 'outputCmplDate',
+				type : 'date'
+			}, {
+				title : '재발행 담당자', 
+				data : 'reOutputWaitMember.name',
+				bodyClassName : 'text-center',
+				render : function(row, data, index) {
+					var html = rhDiv;
+					html += data ? rhDivAprv
+						+ data + '</div>'
+						: rhDivNotAprv;
+					html += '</div></div>';
+					return html;
+				}
+			}, {
+				title : '재발행대기일시', 
+				data : 'reOutputWaitDate',
+				type : 'date'
+			}, {
+				title : '재발행완료일시', 
+				data : 'reOutputCmplDate',
+				type : 'date'
+			}
+		], null);
+			
+	});
+	
+	function setDaterangepicker(start, end) {
+		
+		$('#default-daterange input').val(start.format('YYYY-MM-DD') + ' ~ ' + end.format('YYYY-MM-DD'));
+		$('#startDate').val(start.format('YYYY-MM-DD'));
+		$('#finishDate').val(end.format('YYYY-MM-DD'));
+	}
+	
+	function search() {
+		UserTable.reload('_collect_grid');
+	}
+	
+	
+	
+	/* ]]> */
+	</script>
+	
+</body>
+</html>

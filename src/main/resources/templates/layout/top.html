@@ -1,0 +1,221 @@
+<th:block th:replace="popup/password"></th:block>
+
+<div id="header" class="header navbar-default">
+	<!-- begin navbar-header -->
+	<div class="navbar-header">
+		<!-- <button type="button" class="navbar-toggle collapsed navbar-toggle-left" data-click="sidebar-minify">
+			<span class="icon-bar"></span>
+			<span class="icon-bar"></span>
+			<span class="icon-bar"></span>
+		</button> -->
+		<button type="button" class="navbar-toggle" data-click="sidebar-toggled">
+			<span class="icon-bar"></span>
+			<span class="icon-bar"></span>
+			<span class="icon-bar"></span>
+		</button>
+		<a href="/" class="navbar-brand">
+			<!-- <img src="/assets/img/logo/lims_logo.png" style="margin-bottom: 4px;"/> --> Clinomics <b style="display: inline-block; font-size: 1.15em;">LIMS</b>
+		</a>
+	</div>
+	<!-- end navbar-header -->
+	<!-- begin header-nav -->
+	<ul class="navbar-nav navbar-right">
+		<!-- <li class="dropdown navbar-language" th:style="${@environment.acceptsProfiles('prd')} ? 'display:none' : ''">
+				
+			<a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false" th:title="${#locale}">
+				<i class="fas fa-lg fa-fw m-r-10 fa-language"></i>
+				<span th:class="'flag-icon flag-icon-' + ${#locale}" th:title="${#locale}"></span>
+				<span class="d-none d-md-inline" th:text="#{button.language}">Language</span>
+				<b class="caret"></b>
+			</a>
+			<ul class="dropdown-menu p-b-0" x-placement="bottom-start" style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(0px, 50px, 0px);">
+				<li class="arrow"></li>
+				<li><a href="?lang=en"><span class="flag-icon flag-icon-us" title="us"></span>English</a></li>
+				<li><a href="?lang=kr"><span class="flag-icon flag-icon-kr" title="kr"></span>Korea</a></li>
+				<li class="divider m-b-0"></li>
+			</ul>
+		</li> -->
+		<li class="dropdown navbar-user">
+			<a href="javascript:void(0)" class="dropdown-toggle" data-toggle="dropdown">
+				<!-- <img src="/assets/img/user/user-12.jpg" alt="icon" />  -->
+				<i class="fas fa-lg fa-fw m-r-10 fa-user"></i>
+				<span class="d-none d-md-inline"><span sec:authentication="principal.username"/></span> <b class="caret"></b>
+			</a>
+
+			<div class="dropdown-menu dropdown-menu-right">
+				<!-- <a href="javascript:;" class="dropdown-item">Edit Profile</a>
+				<a href="javascript:;" class="dropdown-item"><span class="badge badge-danger pull-right">2</span> Inbox</a>
+				<a href="javascript:;" class="dropdown-item">Calendar</a>
+				<div class="dropdown-divider"></div>
+				<a href="javascript:void(0)" class="dropdown-item" id="profile">사용자 정보</a>
+				<a href="javascript:;" class="dropdown-item">Setting</a> -->
+				<a href="javascript:passwordPopupOnload()" class="dropdown-item" id="changePw">
+					<i class="fas fa-lg fa-fw m-r-10 fa-key"></i><span>Password 변경</span>
+				</a>
+				<div class="dropdown-divider"></div>
+				<a href="javascript:document.getElementById('logoutForm').submit();" class="dropdown-item" id="logout">
+					<i class="fas fa-lg fa-fw m-r-10 fa-sign-out-alt"></i><span th:text="#{button.logout}"></span>
+				</a>
+			</div>
+		</li>
+	</ul>
+	<form action="/logout" id="logoutForm" method="POST" class="margin-bottom-0" ></form>
+	<!-- end header navigation right -->
+	<!-- <div class="navbar-form navbar-right form-group">
+		<form action="/logout" id="logoutForm" method="POST" class="margin-bottom-0" >
+			<button type="submit" class="btn btn-grey btn-sm" onclick="">Logout</button>
+		</form>
+	</div> -->
+</div>
+<script>
+var CommonMsg = function() {
+	return {
+		//save
+		save : function(sfunc, msg) {
+			if (!msg) msg = "저장이 완료되었습니다";
+			swal({
+				text: msg,
+				icon: 'success',
+				title: '정상',
+				buttons : {
+					confirm : {
+						visible : false
+					}
+				},
+				height: '30em',
+				timer: 1200
+			}).then(function (result) {
+				sfunc();
+			})
+		},
+		//save
+		error : function(sfunc, msg) {
+			if (!msg) msg = "에러가 발생하였습니다. 관리자에게 문의바랍니다.";
+			swal({
+				title: '에러',
+				text: msg,
+				icon: 'error',
+				buttons: {
+					confirm: {
+						text: '확인',
+						value: true,
+						visible: true,
+						className: 'btn btn-white',
+						closeModal: true
+					}
+				}
+	  		}).then(function (result) {
+	  			sfunc();
+	  		});
+		},
+		warning : function(sfunc, msg) {
+			if (!msg) msg = "실패하였습니다. 관리자에게 문의바랍니다.";
+			swal({
+				title: '실패',
+				text: msg,
+				icon: 'warning',
+				buttons: {
+					confirm: {
+						text: '확인',
+						value: true,
+						visible: true,
+						className: 'btn btn-white',
+						closeModal: true
+					}
+				}
+	  		}).then(function (result) {
+	  			sfunc();
+	  		});
+		},
+		info : function(sfunc, msg) {
+			if (!msg) msg = "실패하였습니다. 관리자에게 문의바랍니다.";
+			swal({
+				title: '실패',
+				text: msg,
+				icon: 'info',
+				buttons: {
+					confirm: {
+						text: '확인',
+						value: true,
+						visible: true,
+						className: 'btn btn-white',
+						closeModal: true
+					}
+				}
+	  		}).then(function (result) {
+	  			sfunc();
+	  		});
+		},
+		//yes and no
+		yesNo : function(ofunc, cfunc, msg) {
+			if (!msg) msg = "진행하시겠습니까?";
+			swal({
+				title: msg,
+				icon: 'warning',
+				buttons: {
+					confirm: {
+						text: '네',
+						value: true,
+						visible: true,
+						className: 'btn btn-info',
+						closeModal: true
+					},
+					cancel: {
+						text: '아니오',
+						value: null,
+						visible: true,
+						className: 'btn btn-white',
+						closeModal: true,
+					}
+				},
+				dangerMode: true
+			}).then(function (result) {
+				if (result) {
+		  			ofunc();
+				} else {
+		  			if (cfunc) cfunc();
+				}
+	  		});
+		},
+		//save
+		okCancel : function(ofunc, cfunc, msg) {
+			if (!msg) msg = "진행하시겠습니까?";
+			swal({
+				title: msg,
+				icon: 'warning',
+				buttons: {
+					confirm: {
+						text: 'OK',
+						value: true,
+						visible: true,
+						className: 'btn btn-info',
+						closeModal: true
+					},
+					cancel: {
+						text: 'Cancel',
+						value: null,
+						visible: true,
+						className: 'btn btn-white',
+						closeModal: true,
+					}
+				},
+				dangerMode: true
+			}).then(function (result) {
+				if (result) {
+		  			ofunc();
+				} else {
+					if (cfunc) cfunc();
+				}
+	  		});
+		}
+	};
+}();
+
+function s2ab(s) { 
+	var buf = new ArrayBuffer(s.length); //convert s to arrayBuffer
+	var view = new Uint8Array(buf);  //create uint8array as viewer
+	for (var i=0; i<s.length; i++) view[i] = s.charCodeAt(i) & 0xFF; //convert to octet
+	return buf;    
+}
+
+</script>

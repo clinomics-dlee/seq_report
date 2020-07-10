@@ -1,0 +1,127 @@
+<style>
+@media screen and (min-width: 768px) {
+	.modal-dialog {
+	  	max-width: 1024px; /* New width for default modal */
+	  	max-height: 600px;
+	}
+}
+
+#_com_all_popup_table th {
+	white-space: nowrap;
+    word-break: nowrap;
+}
+
+#_com_all_popup_table td {
+	white-space: nowrap;
+	word-break: nowrap;
+}
+</style>
+<div class="modal fade" id="modal-after">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h4 class="modal-title">검체 현황</h4>
+				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+			</div>
+			<div class="modal-body">
+				<div id="_com_after_popup">
+				</div>
+				
+			</div>
+			<div class="modal-footer">
+				<a href="javascript:;" class="btn btn-white" data-dismiss="modal">Close</a>
+				<!-- <a href="javascript:popupSave();" class="btn btn-success">Save</a> -->
+			</div>
+		</div>
+	</div>
+</div>
+	
+<script th:inline="javascript">
+/* <![CDATA[ */       
+//ajax Data List
+
+function afterPopupOnload(type, bundleId, startDate, endDate) {
+	$("#modal-after").modal();
+	
+	UserTable.init('_com_after_popup', true, [10, 50, 100, 200, 500] , [10, 50, 100, 200, 500], true);
+	afterAfterGetItem(type, bundleId, startDate, endDate);
+}
+
+function afterAfterGetItem(type, bundleId, startDate, endDate) {
+	var url = "/popup/registered";
+	if (type == 1) {
+		url = "/popup/analysis";
+	} else if (type == 2) {
+		url = "/popup/completed";
+	} else if (type == 3) {
+		url = "/popup/reported";
+	}
+	UserTable.draw('_com_after_popup', {
+		url : url,
+		type : "GET",
+		data : function() {
+			return {
+				bundleId : bundleId,
+				sDate : startDate,
+				fDate : endDate
+			};
+		},
+		dataType : "json",
+		contentType : "application/json; charset=utf-8",
+		beforeSend : function(xhr) {
+			xhr.setRequestHeader(header, token);
+		}
+	}, [{
+		title : 'No', 
+		data : 'id',
+		type : 'index',
+		headClassName : 'width-50',
+		bodyClassName : 'text-center'
+	}, {
+		title : "서비스",
+		data : "bundle.name",
+	}, {
+		title : "검사실ID",
+		data : "laboratoryId"
+	}, {
+		title : "바코드",
+		data : "items.barcode"
+	}, {
+		title : '상태', 
+		data : "statusCode",
+		render : function(row, data, index) {
+			var value = g_statusCodeInfo[data];
+			return value;
+		}
+	}, {
+		serverHeader : true
+	}, {
+		title : '검체 채취일', 
+		data : 'collectedDate',
+		type : 'date'
+	}, {
+		title : '검체 수령일', 
+		data : 'receivedDate',
+		type : 'date'
+	}, {
+		title : '검체 종류', 
+		data : 'sampleType'
+	}, {
+		title : "최근수정일자",
+		data : "modifiedDate",
+		type : "date"
+	}, {
+		title : "생성일자",
+		data : "createdDate",
+		type : "date"
+	}, {
+		title : "생성자",
+		data : "createdMember.name",
+	}]);
+	
+}	
+
+
+
+/* ]]> */
+</script>

@@ -1,0 +1,76 @@
+spring:
+  mail:
+    default-encoding: UTF-8
+    host: smtp.gmail.com
+    port: 587
+    username: "info@clinomics.co.kr"
+    password: "@1q2w3e4r@"
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+        debug: true
+        mime: UTF-8
+        transport:
+          protocol: smtp
+  datasource:
+    initialization-mode: always
+  messages:
+    basename: i18n/messages
+    encoding: UTF-8
+  jpa:
+    show-sql: true
+    generate-ddl: true
+    database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
+  security:
+    user:
+      name: user
+      password: 1234
+  thymeleaf:
+    cache: false
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 1024MB
+      max-request-size: 1024MB
+datasource:
+  seq:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    jdbcUrl: jdbc:mysql://localhost:3306/seq_report?autoReconnect=true&characterEncoding=UTF-8&serverTimezone=Asia/Seoul
+    username: root
+    password: 7890uiop
+  pdf:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    jdbcUrl: jdbc:mysql://localhost:3306/seq_report?autoReconnect=true&characterEncoding=UTF-8&serverTimezone=Asia/Seoul
+    username: root
+    password: 7890uiop
+seq:
+  filePath: /BiO/Serve/seq_report
+  celFilePath: /BiO/Serve/seq_report/celFiles
+  workspacePath : /BiO/Serve/seq_report/workspace
+  apmraChipPath : /BiO/Research/Cel2GSSInput/Script/runAnalysis_GSK.py
+  customChipPath : /BiO/Research/Cel2GSSInput/Script/runAnalysis.py
+externalApi: 
+  url: https://api.genosolutiony.com/etc/
+  tokenName: apiKey
+  token: Sn4Wy4nlqmGEytAx5SkBXdhAp1LKYXXapc1hb6FG
+titan:
+  filePath: /BiO/Serve/seq_report/titan
+  ftp:
+    address: 192.168.0.238
+    port: 21
+    username: AFFXUSER
+    password: affxpd
+rest:
+  http:
+    auth-token-header-name: seqApiKey
+    auth-token: askdfji1294iksvn09230985kslkfjhet09239iu2052u90523knzcxmlvn
+logging:
+  file: /BiO/Serve/seq_report/logs/seq_report.log
+server:
+  port: 8080
+  servlet:
+    session:
+      timeout: 1800
