@@ -7,7 +7,6 @@ import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 
 import com.clinomics.entity.seq.Member;
-import com.clinomics.entity.seq.Sample;
 import com.clinomics.repository.seq.MemberRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,7 +28,7 @@ public class EmailSender {
     @Autowired
     private SpringTemplateEngine templateEngine;
 
-    public void sendMailToFail(List<Sample> failSamples) {
+    public void sendMailToFail() {
         try {
             MimeMessage msg = javaMailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(msg, true);
@@ -50,7 +49,6 @@ public class EmailSender {
             helper.setTo(emails.toArray(new String[emails.size()]));
 
             Context context =  new Context();
-            context.setVariable("samples", failSamples);
 
             String html = templateEngine.process("mail/template", context);
             helper.setText(html, true);
