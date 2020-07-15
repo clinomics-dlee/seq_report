@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"
+xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+	<th:block th:replace="layout/head"></th:block>
+	<script type = "text/javascript" src = "https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.5.3/jspdf.min.js"></script>
+	<script type = "text/javascript" src = "https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+</head>
+<body class="pace-done">
+	<!-- begin #page-loader -->
+	<div id="page-loader" class="fade show">
+		<div class="material-loader">
+			<svg class="circular" viewBox="25 25 50 50">
+				<circle class="path" cx="50" cy="50" r="20" fill="none" stroke-width="2" stroke-miterlimit="10"></circle>
+			</svg>
+			<div class="message">Loading</div>
+		</div>
+	</div>
+	<!-- end #page-loader -->
+	
+	<!-- begin #page-container -->
+	<div id="page-container" class="fade page-sidebar-fixed page-header-fixed">
+		<!-- begin #header -->
+		<th:block th:replace="layout/top"></th:block>
+		<!-- end #header -->
+		<!-- begin #sidebar -->
+		<th:block th:replace="layout/left"></th:block>
+		<!-- end #sidebar -->
+		<!-- begin #content -->
+		<div id="content" class="content">
+			<!-- begin page header -->
+			<ol class="breadcrumb float-xl-right">
+				<li class="breadcrumb-item">SEQ</li>
+				<li class="breadcrumb-item active">Report</li>
+			</ol>
+			
+			<h1 id="page-header" class="page-header">Report</h1>
+			
+			<div class="row">
+				<div class="col-xl-12">
+					
+					<div class="panel panel-inverse">
+						<!-- begin panel-body -->
+						<div id="panel-body" class="panel-body">
+							<!-- begin tab-pane -->
+							<div class="form-group row m-b-12">
+								<div>
+									<button type="button" class="btn btn-success m-l-10" onclick="downloadFile('pdf');">PDF</button>
+									<button type="button" class="btn btn-warning m-l-10" onclick="downloadFile('html');">HTML</button>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<!-- end panel -->
+		</div>
+		<!-- end #content -->
+	</div>
+	
+	<script th:inline="javascript">
+	/* <![CDATA[ */       
+
+	var token = $("meta[name='_csrf']").attr("content");
+	var header = $("meta[name='_csrf_header']").attr("content");
+	
+	//  시작
+	$(document).ready(function() {
+		App.init();
+	});
+	
+	function downloadFile(fileType) {
+		if (fileType == "pdf") {
+			window.open("/seq/report/pdf", "_blank");
+			// window.open("/p/pdf/template", "_blank");
+		} else if (fileType == "html") {
+
+		}
+	}
+
+	/* ]]> */
+	</script>
+	
+</body>
+</html>

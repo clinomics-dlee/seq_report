@@ -28,6 +28,19 @@ dependencies {
 	compile group: 'net.rakugakibox.util', name: 'yaml-resource-bundle', version: '1.1'
 	compile group: 'org.thymeleaf.extras', name: 'thymeleaf-extras-springsecurity5'
 	compile group: 'com.google.guava', name: 'guava', version: '28.2-jre'
+	
+	compile group: 'com.itextpdf', name: 'kernel', version: '7.1.11'
+	compile group: 'com.itextpdf', name: 'layout', version: '7.1.11'
+	compile group: 'com.itextpdf', name: 'io', version: '7.1.11'
+	compile group: 'com.itextpdf', name: 'forms', version: '7.1.11'
+	compile group: 'com.itextpdf', name: 'pdfa', version: '7.1.11'
+	compile group: 'com.itextpdf', name: 'sign', version: '7.1.11'
+	compile group: 'com.itextpdf', name: 'barcodes', version: '7.1.11'
+	testCompile group: 'com.itextpdf', name: 'font-asian', version: '7.1.11'
+	testCompile group: 'com.itextpdf', name: 'hyph', version: '7.1.11'
+	compile group: 'com.itextpdf', name: 'html2pdf', version: '2.1.7'
+	compile group: 'com.itextpdf', name: 'itext7-core', version: '7.1.11', ext: 'pom'
+
 	testImplementation('org.springframework.boot:spring-boot-starter-test') {
 		exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
 	}
