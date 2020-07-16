@@ -41,6 +41,8 @@ dependencies {
 	compile group: 'com.itextpdf', name: 'html2pdf', version: '2.1.7'
 	compile group: 'com.itextpdf', name: 'itext7-core', version: '7.1.11', ext: 'pom'
 
+	compile group: 'commons-codec', name: 'commons-codec', version: '1.14'
+
 	testImplementation('org.springframework.boot:spring-boot-starter-test') {
 		exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
 	}

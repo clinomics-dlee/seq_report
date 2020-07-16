@@ -48,6 +48,7 @@ datasource:
     password: uiop7890
 seq:
   filePath: /BiO/Serve/seq_report
+  tempFilePath: /BiO/Serve/seq_report/tempFiles
   celFilePath: /BiO/Serve/seq_report/celFiles
   workspacePath : /BiO/Serve/seq_report/workspace
   apmraChipPath : /BiO/Research/Cel2GSSInput/Script/runAnalysis_GSK.py

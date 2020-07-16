@@ -73,9 +73,8 @@ xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 	function downloadFile(fileType) {
 		if (fileType == "pdf") {
 			window.open("/seq/report/pdf", "_blank");
-			// window.open("/p/pdf/template", "_blank");
 		} else if (fileType == "html") {
-
+			window.open("/seq/report/html", "_blank");
 		}
 	}
 

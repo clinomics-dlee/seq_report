@@ -1,13 +1,20 @@
 package com.clinomics.controller;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.URL;
+import java.net.URLEncoder;
+import java.nio.file.CopyOption;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
-import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.itextpdf.html2pdf.ConverterProperties;
@@ -16,9 +23,10 @@ import com.itextpdf.html2pdf.resolver.font.DefaultFontProvider;
 import com.itextpdf.io.font.FontProgramFactory;
 import com.itextpdf.layout.font.FontProvider;
 
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.util.FileCopyUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -29,49 +37,116 @@ import org.springframework.web.bind.annotation.RestController;
 public class SeqController {
 	private Logger logger = LoggerFactory.getLogger(this.getClass());
 
-	@GetMapping("/report/pdf")
-	public void exportReportPdf(@RequestParam Map<String, String> params, HttpServletResponse response) {
-		try {
-			File file = new File("/BiO/Serve/seq_report/test.pdf");
-			// #. pdf로 변활할 html가공
-			String html = "";
+	@Value("${seq.tempFilePath}")
+	private String tempFilePath;
 
-			InputStream input = new URL("http://127.0.0.1:8080/p/pdf/template").openStream();
+	@GetMapping("/report/pdf")
+	public void exportReportPdf(@RequestParam Map<String, String> params, HttpServletRequest request,
+			HttpServletResponse response) {
+		try {
+			File tempDir = new File(tempFilePath);
+			if (!tempDir.exists()) tempDir.mkdirs();
+
+			File file = File.createTempFile("temp_", ".pdf", tempDir);
+			// #. pdf로 변활할 html가공
+			String domain = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort();
+			String pdfPageAddress = domain + "/pdf/template";
+			InputStream is = new URL(pdfPageAddress).openStream();
 
 			// #. 한글 문자열 문제로 인하여 폰트 지정
 			ConverterProperties converterProp = new ConverterProperties();
 			FontProvider fontProvider = new DefaultFontProvider(false, false, false);
-			fontProvider.addFont(FontProgramFactory.createFont("/static/assets/font/NanumGothic.ttf"));
+			fontProvider.addFont(FontProgramFactory.createFont("/static/assets/font/NotoSansKR-Black.otf"));
+			fontProvider.addFont(FontProgramFactory.createFont("/static/assets/font/NotoSansKR-Bold.otf"));
+			fontProvider.addFont(FontProgramFactory.createFont("/static/assets/font/NotoSansKR-Light.otf"));
+			fontProvider.addFont(FontProgramFactory.createFont("/static/assets/font/NotoSansKR-Medium.otf"));
+			fontProvider.addFont(FontProgramFactory.createFont("/static/assets/font/NotoSansKR-Regular.otf"));
+			fontProvider.addFont(FontProgramFactory.createFont("/static/assets/font/NotoSansKR-Thin.otf"));
 			converterProp.setFontProvider(fontProvider);
 
 			// #. HTML 을 PDF로 변경
-			// HtmlConverter.convertToPdf(html, new FileOutputStream(file), converterProp);
-			HtmlConverter.convertToPdf(input, new FileOutputStream(file), converterProp);
-		} catch(Exception e) {
+			HtmlConverter.convertToPdf(is, new FileOutputStream(file), converterProp);
+
+			requestFile(file, "report.pdf", request, response, true);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	@GetMapping("/report/html")
+	public void exportReportHtml(@RequestParam Map<String, String> params, HttpServletRequest request,
+			HttpServletResponse response) {
+		try {
+			File tempDir = new File(tempFilePath);
+			if (!tempDir.exists()) tempDir.mkdirs();
+
+			File file = File.createTempFile("temp_", ".html", tempDir);
+
+			// #. pdf로 변활할 html가공
+			String domain = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort();
+			String pdfPageAddress = domain + "/pdf/template";
+			InputStream is = new URL(pdfPageAddress).openStream();
+
+			CopyOption[] options = new CopyOption[] {
+				StandardCopyOption.REPLACE_EXISTING // 대상파일이 있어도 덮어쓴다
+			};
+			Files.copy(is, file.toPath(), options);
+
+			requestFile(file, "report.html", request, response, true);
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 
 	// ############################ private
-	private void requestExcel(XSSFWorkbook xlsx, String fileName, HttpServletResponse response) {
-		if (fileName == null || fileName.trim().length() < 1) {
-			fileName = "sample";
-		}
-		response.setHeader("Content-Disposition", "attachment;filename=" + fileName + ".xlsx");
-		// 엑셀파일명 한글깨짐 조치
-		response.setHeader("Content-Transfer-Encoding", "binary;");
-		response.setHeader("Pragma", "no-cache;");
-		response.setHeader("Expires", "-1;");
-		response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+	private void requestFile(File file, String fileName, HttpServletRequest request, HttpServletResponse response, boolean deleteFile) {
+		FileInputStream fis = null;
+		OutputStream out = null;
+		// #. 삭제되어야 하는 파일들
+		List<File> garbageFiles = new ArrayList<File>();
 
 		try {
-			ServletOutputStream out = response.getOutputStream();
+			if (deleteFile) {
+				garbageFiles.add(file);
+			}
 
-			xlsx.write(out);
-			xlsx.close();
+			String userAgent = request.getHeader("User-Agent");
+			boolean ie = userAgent.indexOf("MSIE") > -1 || userAgent.indexOf("Trident") > -1 || userAgent.indexOf("Edge") > -1;
+			if (ie) {
+				fileName = URLEncoder.encode(file.getName(), "utf-8");
+			} else {
+				fileName = new String(file.getName().getBytes("utf-8"), "ISO-8859-1");
+			}
+
+			response.setContentType("application/octet-stream");
+			response.setContentLengthLong(file.length());
+
+			response.setHeader("Content-Disposition", "attachment; filename=\"" + fileName + "\";");
+			response.setHeader("Content-Transfer-Encoding", "binary");
+			// #. jquery.fileDownload 후 화면 처리를 위한 셋팅
+			// response.setHeader("Set-Cookie", "fileDownload=true; path=/");
+
+			out = response.getOutputStream();
+
+			fis = new FileInputStream(file);
+			FileCopyUtils.copy(fis, response.getOutputStream());
 			out.flush();
-		} catch (IOException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
+		} finally {
+			if (fis != null) {
+				try {
+					fis.close();
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+
+			for (File garbageFile : garbageFiles) {
+				if (garbageFile.exists()) {
+					garbageFile.delete();
+				}
+			}
 		}
 	}
 }
