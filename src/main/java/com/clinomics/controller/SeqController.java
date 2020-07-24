@@ -3,6 +3,7 @@ package com.clinomics.controller;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URL;
@@ -17,20 +18,28 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.clinomics.service.SeqService;
 import com.itextpdf.html2pdf.ConverterProperties;
 import com.itextpdf.html2pdf.HtmlConverter;
 import com.itextpdf.html2pdf.resolver.font.DefaultFontProvider;
 import com.itextpdf.io.font.FontProgramFactory;
 import com.itextpdf.layout.font.FontProvider;
 
+import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 @RequestMapping("/seq")
 @RestController
@@ -39,6 +48,23 @@ public class SeqController {
 
 	@Value("${seq.tempFilePath}")
 	private String tempFilePath;
+
+	@Autowired
+	private SeqService seqService;
+
+	@GetMapping("/report/get")
+	public Map<String, Object> getReport(@RequestParam Map<String, String> params) {
+		return seqService.findReportByParams(params);
+	}
+
+	@PostMapping("/report/save")
+	public Map<String, String> save(@RequestParam("file") MultipartFile multipartFile, MultipartHttpServletRequest request)
+			throws InvalidFormatException, IOException {
+		UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		String memberId = userDetails.getUsername();
+		
+		return seqService.save(multipartFile, memberId);
+	}
 
 	@GetMapping("/report/pdf")
 	public void exportReportPdf(@RequestParam Map<String, String> params, HttpServletRequest request,

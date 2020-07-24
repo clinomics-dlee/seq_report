@@ -39,16 +39,42 @@ xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 			
 			<div class="row">
 				<div class="col-xl-12">
-					
 					<div class="panel panel-inverse">
-						<!-- begin panel-body -->
 						<div id="panel-body" class="panel-body">
-							<!-- begin tab-pane -->
 							<div class="form-group row m-b-12">
-								<div>
-									<button type="button" class="btn btn-success m-l-10" onclick="downloadFile('pdf');">PDF</button>
-									<button type="button" class="btn btn-warning m-l-10" onclick="downloadFile('html');">HTML</button>
+								<label class="col-form-label m-l-2">서비스</label>
+								<div class="col-xs-push-0">
+									<select class="form-control width-200" data-parsley-required="true" id="sel_bundle" name="bundleId">
+										<option value="">전체</option>
+										<option th:each="bnd : ${bundles}" th:value="${bnd.getId()}" th:text="${bnd.getName()}"></option>
+									</select>
 								</div>
+								
+								<label class="col-form-label m-l-5">조회일자</label>
+								<div class="input-group" id="default-daterange" style="width: auto; float: right; padding-left: 10px; min-width: 220px" >
+								    <input type="text" name="default-daterange" class="form-control" value="" placeholder="클릭하여 선택" readonly="readonly"/>
+								    <span class="input-group-append">
+								    	<span class="input-group-text"><i class="fa fa-calendar"></i></span>
+									</span>
+								</div>
+								<label class="col-form-label m-l-10">검색어</label>
+								<div class="col-xs-push-0">
+								    <input type="text" id="keyword" class="form-control"/>
+								</div>
+								<div>
+									<button onClick="search();" class="btn btn-default m-l-10">조회</button>
+								</div>
+							</div>
+							<hr/>
+							<div id="_report_grid"></div>
+							<hr/>
+							<div class="row">
+								<form id="fileupload" method="POST" enctype="multipart/form-data">
+									<div class="hide">
+										<input type="file" id="file" name="file">
+									</div>
+								</form>
+								<button onClick="resultUpload();" class="btn btn-success m-l-20">결과업로드</button>
 							</div>
 						</div>
 					</div>
@@ -62,20 +88,91 @@ xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 	<script th:inline="javascript">
 	/* <![CDATA[ */       
 
+	var g_statusCodeInfo = /*[[${statusCodes}]]*/ {};
+
 	var token = $("meta[name='_csrf']").attr("content");
 	var header = $("meta[name='_csrf_header']").attr("content");
 	
 	//  시작
 	$(document).ready(function() {
 		App.init();
+
+		$('#file').on('change', function () {
+			if ($("#file").val() == '') return;
+			
+			var form = $('#fileupload')[0];
+			var data = new FormData(form);
+			$.ajax({
+				enctype: 'multipart/form-data',
+				url: '/seq/report/save',
+				type: 'post',
+				data : data,
+				processData: false,
+				contentType: false,
+				beforeSend: function(xhr) {
+					xhr.setRequestHeader(header, token);
+				},
+				success: function(data,xhr) {
+					if (data.result == "00") {
+						CommonMsg.save(function() { });
+					} else {
+						CommonMsg.error(function() { }, data.message);
+					}
+				},
+				error : function(xhr, status, error) {
+					CommonMsg.error(function() {});
+				},
+				complete : function() {
+					$("#file").val('');
+					// #. 새로고침
+					UserTable.reload('_report_grid');
+				}
+			});
+		});
+
+		UserTable.init('_report_grid', true, [10, 50, 100, 200, 500] , [10, 50, 100, 200, 500]);
+		drawReportGrid();
 	});
 	
-	function downloadFile(fileType) {
-		if (fileType == "pdf") {
-			window.open("/seq/report/pdf", "_blank");
-		} else if (fileType == "html") {
-			window.open("/seq/report/html", "_blank");
-		}
+	function drawReportGrid() {
+		UserTable.draw('_report_grid', {
+			url : "/seq/report/get",
+			type : "GET",
+			data : function() {
+				var param = {
+					sDate : $('#startDate').val() == "" || $('#startDate').val() == null ? "" : $('#startDate').val(),
+					fDate : $('#finishDate').val() == "" || $('#finishDate').val() == null ? "" : $('#finishDate').val(),
+					keyword : $("#keyword").val()
+				};
+				return param;
+			},
+			beforeSend : function(xhr) {
+				xhr.setRequestHeader(header, token);
+			}
+		}, [{
+			title : 'No', 
+			data : 'id',
+			type : 'index',
+			headClassName : 'width-50',
+			bodyClassName : 'text-center'
+		}, {
+			title : "Sample ID",
+			data : "sampleId"
+		}, {
+			title : "File Path",
+			data : "filePath"
+		}, {
+			title : "상태",
+			data : "statusCode"
+		}, {
+			title : "등록일",
+			data : "createdDate",
+			type : "date"
+		}]);
+	}
+
+	function resultUpload() {
+		$('#file').trigger('click'); 
 	}
 
 	/* ]]> */
