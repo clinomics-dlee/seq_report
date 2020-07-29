@@ -1,0 +1,105 @@
+    <div class="page">
+
+        <div class="header">
+            <h1 style="color: white;"><b>General Information</b></h1>
+        </div>
+        
+        <div class="content">
+            
+            <h2>
+                3.3 Quality filtered results (Clean reads)
+            </h2>
+            <table class="type09" style="width: 100%;">
+                <thead>
+                    <tr>
+                        <th>Sample ID</th>
+                        <th>Pair name</th>
+                        <th>Clean reads</th>
+                        <th>Clean bases (bp)</th>
+                        <th>Total clean<br/>bases (Gb)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td rowspan=2>Joshua</td>
+                        <td>Forward</td>
+                        <td>336,623,379</td>
+                        <td>48,898,734,355</td>
+                        <td rowspan=2>97.8</td>
+                    </tr>
+                    <tr>
+                        <td>Reverse</td>
+                        <td>336,623,379</td>
+                        <td>48,899,547,283</td>
+                    </tr>
+                </tbody>
+            </table>
+            <ul style="margin-bottom: 35px;">
+                <li>
+                    The read filtering results were generated using Fastp software
+                </li>
+                <li>
+                    Sample ID : ID provided by customer
+                </li>
+                <li>
+                    Pair Name : Forward, reverse for sequencing strand
+                </li>
+                <li>
+                    Clean reads : Number of reads after low quality filtering
+                </li>
+                <li>
+                    Clean bases : Number of bases after low quality filtering
+                </li>
+                <li>
+                    Total clean bases : The total amount of filtered sequences in giga base (Gb)
+                </li>
+            </ul>
+            <h1>
+                4. Mapping statistics
+            </h1>
+            <h2>
+                4.1 Mapping results
+            </h2>
+            <table class="type09" style="width: 100%;">
+                <thead>
+                    <tr>
+                        <th>Sample ID</th>
+                        <th>Clean read<br/>depth (×)</th>
+                        <th>Mapping rate<br/>(%)</th>
+                        <th>Properly<br/>mapped rate<br/>(%)</th>
+                        <th>Duplicates rate<br/>(%)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Joshua</td>
+                        <td>31.59</td>
+                        <td>90.73</td>
+                        <td>88.27</td>
+                        <td>5.24</td>
+                    </tr>
+                </tbody>
+            </table>
+            <ul>
+                <li>
+                    Sample ID : ID provided by customer
+                </li>
+                <li>
+                    Clean read depth : Average depth of clean reads according to the reference genome size
+                </li>
+                <li>
+                    Mapping rate : The ratio of clean read aligned to the reference genome sequence
+                </li>
+                <li>
+                    Properly mapped rate : Both forward and reverse reads were mapped proper orientation
+                </li>
+                <li>
+                    Duplicates rate : The ratio of duplicate reads that are defined as originating from a single fragment of DNA
+                </li>
+            </ul>
+        </div>
+        
+        <div class="footer">
+            <span>8</span>
+        </div>
+    </div>    

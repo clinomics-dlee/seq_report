@@ -1,0 +1,122 @@
+    <div class="page">
+
+        <div class="header">
+            <h1><b>General Information</b></h1>
+        </div>
+        
+        <div class="content">
+            <h1>
+                3. Sequencing Read Statistics
+            </h1>
+            <h2>
+                3.1 Raw reads statistics
+            </h2>
+            <table class="type09" style="width: 100%;">
+                <thead>
+                    <tr>
+                        <th>Sample ID</th>
+                        <th>Pair name</th>
+                        <th>Total reads</th>
+                        <th>Read length</th>
+                        <th>%GC</th>
+                        <th>Total raw<br/>bases (Gb)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td rowspan=2>Joshua</td>
+                        <td>Forward</td>
+                        <td>338,825,907</td>
+                        <td>150</td>
+                        <td>40</td>
+                        <td rowspan=2>101.6</td>
+                    </tr>
+                    <tr>
+                        <td>Reverse</td>
+                        <td>338,825,907</td>
+                        <td>150</td>
+                        <td>41</td>
+                    </tr>
+                </tbody>
+            </table>
+            <ul style="margin-bottom: 35px;">
+                <li>
+                    Sample ID: ID provided by customer
+                </li>
+                <li>
+                    Pair Name: Forward, reverse for sequencing strand
+                </li>
+                <li>
+                    Total reads : Number of reads
+                </li>
+                <li>
+                    Read length : Sequence read length
+                </li>
+                <li>
+                    %GC : GC ratio
+                </li>
+                <li>
+                    Total raw bases : The total amount of raw sequences in giga base (Gb)
+                </li>
+            </ul>
+            <h2>
+                3.2 Adapter sequence removal results
+            </h2>
+            <table class="type09" style="width: 100%;">
+                <thead>
+                    <tr>
+                        <th>Sample ID</th>
+                        <th>Pair name</th>
+                        <th>Reads with adapter</th>
+                        <th>Adapter clean<br/>bases (bp)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td rowspan=2>Joshua</td>
+                        <td>Forward</td>
+                        <td>13,863,769</td>
+                        <td>50,671,036,930</td>
+                    </tr>
+                    <tr>
+                        <td>Reverse</td>
+                        <td>13,339,531</td>
+                        <td>50,682,014,437</td>
+                    </tr>
+                </tbody>
+            </table>
+            <ul>
+                <li>
+                    The adapter filtering results were generated using cutadapt software
+                </li>
+                <li>
+                    Sample ID: ID provided by customer
+                </li>
+                <li>
+                    Pair Name: Forward, reverse for sequencing strand
+                </li>
+                <li>
+                    Reads with adapter : Number of reads containing adapter
+                </li>
+                <li>
+                    Adapter clean bases : Number of bases after adapter removed
+                </li>
+                <li>
+                    Adapter read
+                    <ul>
+                        <li>
+                            - Forward : AAGTCGGAGGCCAAGCGGTCTTAGGAAGACAA
+                        </li>
+                        <li>
+                            - Reverse : AAGTCGGATCGTAGCCATGTCGTTCTGTGAGCCAAGGAGTTG 
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+        
+        
+        <div class="footer">
+            <span>7</span>
+        </div>
+    </div>

@@ -1,0 +1,172 @@
+
+    <div class="page">
+
+        <div class="header p2">
+            <h1 style="color: white;"><b>WGS Pipeline overview</b></h1>
+        </div>
+        <div class="flow" style="margin-left: -45px;">
+            
+            <hr style="top: 200px; left: 345.5px; height: 700px;" class="vline"/>
+            <hr style="top: 214px; left: 185.5px; width: 158px;" class="hline"/>
+            <hr style="top: 214px; left: 185.5px; height: 15px;" class="vline"/>
+
+            <hr style="top: 374px; left: 346px; width: 258px;" class="hline"/>
+            <hr style="top: 374px; left: 605.5px; height: 15px;" class="vline"/>
+            
+            <hr style="top: 614px; left: 215.5px; width: 128px;" class="hline dashed"/>
+            <hr style="top: 614px; left: 215.5px; height: 200px;" class="vline dashed"/>
+            <hr style="top: 816px; left: 215.5px; width: 128px;" class="hline dashed"/>
+
+            <hr style="top: 774px; left: 346px; width: 258px;" class="hline"/>
+            <hr style="top: 774px; left: 605.5px; height: 105px;" class="vline"/>
+            
+            <hr style="top: 854px; left: 215.5px; width: 259px;" class="hline"/>
+            <hr style="top: 854px; left: 215.5px; height: 15px;" class="vline"/>
+            <hr style="top: 854px; left: 475.5px; height: 15px;" class="vline"/>
+
+            <div style="top: 150px; left: 300px;">
+            </div>
+            <div style="top: 155px; left: 295px;">
+            </div>
+            <div style="top: 160px; left: 290px;">
+                Fastq files
+            </div>
+            <span style="top: 234px; left: 180px;" class="triangle bottom"></span>
+            
+            <div style="top: 240px; left: 130px;">
+                FastQC
+            </div>
+            
+            <div style="width: 6px; height: 132px; left: 700px; top: 240px; background-color: #005F68; border: 0px;"> </div>
+            <div class="vtext" style="width: 50px; height: 132px; left: 710px; top: 240px;">
+                Quality control
+            </div>
+            
+            <span style="top: 234px; left: 340px;" class="triangle bottom"></span>
+            <div style="top: 240px; left: 290px;">
+                Adapter<br/>
+                sequence<br/>
+                remove
+            </div>
+            <span style="top: 255px; left: 415px;">Cutadapt</span>
+            
+            <span style="top: 314px; left: 340px;" class="triangle bottom"></span>
+            <div style="top: 320px; left: 290px;">
+                <span>
+                    Quality filter
+                </span>
+            </div>
+            <span style="top: 335px; left: 415px;">FastP</span>
+            
+            <div style="width: 6px; height: 217px; left: 700px; top: 400px; background-color: #005F68; border: 0px;"> </div>
+            <div class="vtext" style="width: 50px; height: 217px; left: 710px; top: 400px;">
+                Alignment process
+            </div>
+
+            <span style="top: 394px; left: 340px;" class="triangle bottom"></span>
+            <div style="top: 400px; left: 290px;">
+                Alignment<br/>
+                to genome
+            </div>
+            <span style="top: 415px; left: 415px;">BWA-mem</span>
+            
+            <span style="top: 394px; left: 600px;" class="triangle bottom"></span>
+            <div style="top: 400px; left: 550px;">
+                FastQC
+            </div>
+            
+            <span style="top: 474px; left: 340px;" class="triangle bottom"></span>
+            <div style="top: 480px; left: 290px;">
+                BAM file<br/>
+                processing
+            </div>
+            <span style="top: 495px; left: 415px;">Picard</span>
+            
+            <span style="top: 554px; left: 340px;" class="triangle bottom"></span>
+            <div style="top: 560px; left: 290px;">
+                Mark<br/>
+                duplication
+            </div>
+            <span style="top: 575px; left: 415px;">Picard</span>
+            <span style="top: 600px; left: 182px;"><strong>NON-HUMAN</strong></span>
+            <span style="top: 613px; left: 355px; font-size: 8pt;">BamIndex</span>
+            
+            <div style="width: 6px; height: 217px; left: 700px; top: 640px; background-color: #005F68; border: 0px;"> </div>
+            <div class="vtext" style="width: 50px; height: 217px; left: 710px; top: 640px;">
+                Variant calling process
+            </div>
+
+            <span style="top: 634px; left: 340px;" class="triangle bottom"></span>
+            <div style="width: 150px; top: 640px; left: 270px;">
+                Base Quality Score<br/>
+                recalibration (BQSR)
+            </div>
+            
+            <span style="top: 714px; left: 340px;" class="triangle bottom"></span>
+            <div style="top: 720px; left: 290px;">
+                Apply BQSR
+            </div>
+            <span style="top: 735px; left: 415px;">GATK4</span>
+            <span style="top: 773px; left: 288px; font-size: 8pt;">BamIndex</span>
+            
+            <span style="top: 794px; left: 340px;" class="triangle bottom"></span>
+            <span style="top: 818.5px; left: 284px;" class="triangle right"></span>
+            <div style="top: 800px; left: 290px;">
+                Haplotype<br/>
+                Caller
+            </div>
+            <span style="top: 815px; left: 415px;">GATK4</span>
+            
+            <div style="width: 6px; height: 86px; left: 700px; top: 880px; background-color: #005F68; border: 0px;"> </div>
+            <div class="vtext" style="width: 50px; height: 86px; left: 710px; top: 880px;">
+                SV calling<br/>Annotation,
+                
+            </div>
+
+            <span style="top: 874px; left: 210px;" class="triangle bottom"></span>
+            <div style="top: 880px; left: 160px;">
+                Ensembl vep
+            </div>
+            <span style="top: 938px; left: 160px; padding-left: 10px;">
+                AFR : African<br/>
+                AMR : American<br/>
+                EAS : East Asian<br/>
+                EUR : European<br/>
+                SAS : South Asian
+            </span>
+            
+            <span style="top: 874px; left: 340px;" class="triangle bottom"></span>
+            <div style="top: 880px; left: 290px;">
+                Kovariome
+            </div>
+            <span style="top: 938px; left: 290px; padding-left: 15px;">
+                Korean<br/>
+                variome<br/>
+                database
+            </span>
+            
+            <span style="top: 874px; left: 470px;" class="triangle bottom"></span>
+            <div style="top: 880px; left: 420px;">
+                Variant<br/>
+                annotation
+            </div>
+            <span style="top: 938px; left: 420px; width:110px; text-align: center;">
+                SnpEff
+            </span>
+            
+            <span style="top: 874px; left: 600px;" class="triangle bottom"></span>
+            <div style="top: 880px; left: 550px;">
+                Structural<br/>
+                variation
+            </div>
+            <span style="top: 938px; left: 550px; width:110px; text-align: center;">
+                Lumpy
+            </span>
+
+            
+        </div>
+        
+        <div class="footer">
+            <span>2</span>
+        </div>
+    </div>
