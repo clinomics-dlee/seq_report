@@ -145,9 +145,9 @@ public class ReportSpecification {
 		return (root, query, criteriaBuilder) -> {
 			Predicate rtn = null;
 			List<Predicate> predicatesAnds = new ArrayList<>();
-
-			predicatesAnds.add(criteriaBuilder.equal(root.get("statusCode"), statusCode));
-
+			if (statusCode != null) {
+				predicatesAnds.add(criteriaBuilder.equal(root.get("statusCode"), statusCode));
+			}
 			rtn = criteriaBuilder.and(predicatesAnds.toArray(new Predicate[predicatesAnds.size()]));
 			return rtn;
 		};

@@ -58,6 +58,11 @@ public class SeqService {
         // #. paging param
         int pageNumber = NumberUtils.toInt(params.get("pgNmb") + "", 0);
         int pageRowCount = NumberUtils.toInt(params.get("pgrwc") + "", 10);
+        String statusString = params.get("statusCode");
+        StatusCode statusCode = null;
+        if (statusString != null && statusString.length() > 1) {
+            statusCode = StatusCode.valueOf(statusString);
+        }
 
         // #. paging 관련 객체
         Pageable pageable = Pageable.unpaged();
@@ -66,9 +71,12 @@ public class SeqService {
         }
         long total;
 
-        Specification<Report> where = Specification.where(ReportSpecification.betweenDate(params))
-                .and(ReportSpecification.keywordLike(params)).and(ReportSpecification.orderBy(params));
-
+        Specification<Report> where = Specification
+                .where(ReportSpecification.betweenDate(params))
+                .and(ReportSpecification.keywordLike(params))
+                .and(ReportSpecification.statusEqual(statusCode))
+                .and(ReportSpecification.orderBy(params));
+        
         total = reportRepository.count(where);
         Page<Report> page = reportRepository.findAll(where, pageable);
         List<Report> list = page.getContent();
@@ -106,7 +114,7 @@ public class SeqService {
             FileUtils.copyDirectory(srcDir, destDir);
 
             // #. 임시 폴더 삭제
-            srcDir.delete();
+            FileUtils.deleteDirectory(srcDir);
 
             // #. save
             Report report = new Report();
@@ -124,6 +132,35 @@ public class SeqService {
         }
         return rtn;
     }
+
+    @Transactional
+	public Map<String, String> delete(List<Integer> ids) {
+		Map<String, String> rtn = Maps.newHashMap();
+		List<Report> reports = reportRepository.findByIdIn(ids);
+        
+        // #. file 경로 삭제
+        for (Report report : reports) {
+            String path = report.getFilePath();
+            if (path != null) {
+                File dir = new File(path);
+                if (dir.exists()) {
+                    try {
+                        FileUtils.deleteDirectory(dir);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }
+        
+		reportRepository.deleteAll(reports);
+		
+		rtn.put("result", ResultCode.SUCCESS_DELETE.get());
+		rtn.put("message", ResultCode.SUCCESS_DELETE.getMsg());
+		return rtn;
+	}
+
+    // ###################################### private
 
     private void upzipFile(File zipFile) {
         FileInputStream fis = null;
@@ -203,7 +240,6 @@ public class SeqService {
             String sLine = null;
             while((sLine = br.readLine()) != null) {
                 outString += sLine + "\n";
-                logger.info("★★★★★★★★★★ outString=" + outString);
             }
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();

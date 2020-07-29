@@ -84,9 +84,6 @@ xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 								<button class="btn btn-white m-r-5 m-b-5" id="btn_next">다음</button>
 								<button class="btn btn-default m-r-5 m-b-5 width-60" id="btn_today">오늘</button>
 							</div>
-							<div class="col-md-4 text-right">
-								<button class="btn btn-success m-r-5 m-b-5" id="btn_human">인체유래물등 다운로드</button>
-							</div>
 						</div>
                     </div>
                 </div>
@@ -95,11 +92,11 @@ xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 		    
             <div class="row">
 				<!-- begin col-3 -->
-				<div class="col-xl-3 col-md-6">
+				<div class="col-xl-4 col-md-6">
 					<div class="widget widget-stats bg-blue">
 						<div class="stats-icon"><i class="fa fa-users"></i></div>
 						<div class="stats-info">
-							<h4 th:text="#{page.calendar.registered}">REGISTERED</h4>
+							<h4>등록</h4>
 							<p id="total1"></p>	
 						</div>
 						<!-- <div class="stats-link">
@@ -109,34 +106,23 @@ xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 				</div>
 				<!-- end col-3 -->
 				<!-- begin col-3 -->
-				<div class="col-xl-3 col-md-6">
-					<div class="widget widget-stats bg-info">
-						<div class="stats-icon"><i class="fa fa-flask"></i></div>
+				<div class="col-xl-4 col-md-6">
+					<div class="widget widget-stats bg-orange">
+						<div class="stats-icon"><i class="fa fa-check-circle"></i></div>
 						<div class="stats-info">
-							<h4 th:text="#{page.calendar.analysis}">ANALYSIS</h4>
+							<h4>PDF 생성중</h4>
 							<p id="total2"></p>	
 						</div>
 					</div>
 				</div>
 				<!-- end col-3 -->
 				<!-- begin col-3 -->
-				<div class="col-xl-3 col-md-6">
-					<div class="widget widget-stats bg-orange">
-						<div class="stats-icon"><i class="fa fa-check-circle"></i></div>
-						<div class="stats-info">
-							<h4 th:text="#{page.calendar.completed}">COMPLETED</h4>
-							<p id="total3"></p>	
-						</div>
-					</div>
-				</div>
-				<!-- end col-3 -->
-				<!-- begin col-3 -->
-				<div class="col-xl-3 col-md-6">
+				<div class="col-xl-4 col-md-6">
 					<div class="widget widget-stats bg-red">
 						<div class="stats-icon"><i class="fa fa-file-alt"></i></div>
 						<div class="stats-info">
-							<h4 th:text="#{page.calendar.reported}">REPORTED</h4>
-							<p id="total4"></p>	
+							<h4>PDF 생성완료</h4>
+							<p id="total3"></p>	
 						</div>
 						
 					</div>
@@ -144,39 +130,6 @@ xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 				<!-- end col-3 -->
 			</div>
 			
-		    <!-- <div class="row">
-				<div class="col-lg-6" style="height: 100%;">
-					<div class="widget widget-stats bg-danger">
-						<div class="stats-info">
-							<p><small>Registered : </small><b id="total1"></b></p>	
-						</div>
-					</div>
-				</div>
-				<div class="col-lg-6" style="height: 100%;">
-					<div class="widget widget-stats bg-warning">
-						<div class="stats-info">
-							<p><small>Analysis : </small><b id="total2"></b></p>	
-						</div>
-					</div>
-				</div>
-			</div>
-		    <div class="row">
-				<div class="col-lg-6" style="height: 100%;">
-					<div class="widget widget-stats bg-green">
-						<div class="stats-info">
-							<p><small>Complete : </small><b id="total3"></b></p>	
-						</div>
-					</div>
-				</div>
-				<div class="col-lg-6" style="height: 100%;">
-					<div class="widget widget-stats bg-info">
-						<div class="stats-info">
-							<p><small>Report : </small><b id="total4"></b></p>	
-						</div>
-					</div>
-				</div>
-			</div> -->
-		    
 		    <div class="row">
 				<div class="col-lg-12" style="height: 100%;">
 				<!-- begin panel -->

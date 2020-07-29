@@ -4,8 +4,6 @@ xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"
 xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
 	<th:block th:replace="layout/head"></th:block>
-	<script type = "text/javascript" src = "https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.5.3/jspdf.min.js"></script>
-	<script type = "text/javascript" src = "https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
 </head>
 <body class="pace-done">
 	<!-- begin #page-loader -->
@@ -42,11 +40,11 @@ xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 					<div class="panel panel-inverse">
 						<div id="panel-body" class="panel-body">
 							<div class="form-group row m-b-12">
-								<label class="col-form-label m-l-2">서비스</label>
+								<label class="col-form-label m-l-2">상태</label>
 								<div class="col-xs-push-0">
-									<select class="form-control width-200" data-parsley-required="true" id="sel_bundle" name="bundleId">
-										<option value="">전체</option>
-										<option th:each="bnd : ${bundles}" th:value="${bnd.getId()}" th:text="${bnd.getName()}"></option>
+									<select class="form-control width-200" id="sel_status">
+										<option selected value>전체</option>
+										<option th:each="code : ${statusCodes}" th:value="${code.key}" th:text="${code.value}"></option>
 									</select>
 								</div>
 								
@@ -75,6 +73,7 @@ xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 									</div>
 								</form>
 								<button onClick="resultUpload();" class="btn btn-success m-l-20">결과업로드</button>
+								<button onClick="deleteReport();" class="btn btn-danger m-l-20">삭제</button>
 							</div>
 						</div>
 					</div>
@@ -84,6 +83,9 @@ xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 		</div>
 		<!-- end #content -->
 	</div>
+
+	<input type="hidden" name="startDate" id="startDate" value="" />
+	<input type="hidden" name="finishDate" id="finishDate" value="" />
 	
 	<script th:inline="javascript">
 	/* <![CDATA[ */       
@@ -96,6 +98,37 @@ xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 	//  시작
 	$(document).ready(function() {
 		App.init();
+
+		$("#keyword").keydown(function(key) {
+			if (key.keyCode == 13) {
+				search();
+			}
+		});
+
+		var startDate = moment().subtract(3, 'months');
+		var endDate = moment();
+
+		//set search date
+		$('#default-daterange').daterangepicker({
+			opens: 'left',
+			format : 'YYYY/MM/DD',
+			separator: ' to ',
+			startDate: moment().subtract(1, 'months'),
+			endDate: moment(),
+			locale: { cancelLabel: 'Clear' }
+		}, function (start, end) {
+			setDaterangepicker(start, end);
+			
+		});
+		startDate = moment().subtract(3, 'months');
+		endDate = moment();
+		setDaterangepicker(startDate, endDate);
+
+		$('#default-daterange').on('cancel.daterangepicker', function(ev, picker) {
+			$('#default-daterange input').val('');
+			$('#startDate').val("");
+			$('#finishDate').val("");
+		});
 
 		$('#file').on('change', function () {
 			if ($("#file").val() == '') return;
@@ -125,7 +158,7 @@ xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 				complete : function() {
 					$("#file").val('');
 					// #. 새로고침
-					UserTable.reload('_report_grid');
+					search();
 				}
 			});
 		});
@@ -133,7 +166,13 @@ xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 		UserTable.init('_report_grid', true, [10, 50, 100, 200, 500] , [10, 50, 100, 200, 500]);
 		drawReportGrid();
 	});
-	
+
+	function setDaterangepicker(start, end) {
+		$('#default-daterange input').val(start.format('YYYY-MM-DD') + ' ~ ' + end.format('YYYY-MM-DD'));
+		$('#startDate').val(start.format('YYYY-MM-DD'));
+		$('#finishDate').val(end.format('YYYY-MM-DD'));
+	}
+
 	function drawReportGrid() {
 		UserTable.draw('_report_grid', {
 			url : "/seq/report/get",
@@ -142,6 +181,7 @@ xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 				var param = {
 					sDate : $('#startDate').val() == "" || $('#startDate').val() == null ? "" : $('#startDate').val(),
 					fDate : $('#finishDate').val() == "" || $('#finishDate').val() == null ? "" : $('#finishDate').val(),
+					statusCode : $("#sel_status").val(),
 					keyword : $("#keyword").val()
 				};
 				return param;
@@ -150,6 +190,14 @@ xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 				xhr.setRequestHeader(header, token);
 			}
 		}, [{
+			title : ' ',
+			data : "id",
+			headClassName : 'width-50',
+			bodyClassName : 'text-center',
+			type : {
+				name : "checkbox"
+			}
+		}, {
 			title : 'No', 
 			data : 'id',
 			type : 'index',
@@ -163,7 +211,14 @@ xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 			data : "filePath"
 		}, {
 			title : "상태",
-			data : "statusCode"
+			data : "statusCode",
+			render : function(row, data, index) {
+				var value = "";
+				if (data != null) {
+					value = g_statusCodeInfo[data];
+				}
+				return value;
+			}
 		}, {
 			title : "등록일",
 			data : "createdDate",
@@ -173,6 +228,47 @@ xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 
 	function resultUpload() {
 		$('#file').trigger('click'); 
+	}
+
+	function deleteReport() {
+		CommonMsg.okCancel(function() {
+			var checkedRows = UserTable.getCheckedRows('_report_grid');
+			var data = [];
+			for (var cr in checkedRows) {
+				data.push(checkedRows[cr].id);
+			}
+			$.ajax({
+				url: '/seq/report/delete',
+				type: 'post',
+				data : JSON.stringify(data),
+				dataType : 'json',
+				contentType : "application/json;charset=utf-8",
+				beforeSend: function(xhr) {
+					xhr.setRequestHeader(header, token);
+				},
+				success: function(data, xhr) {
+					console.log(xhr.status);
+					if (data.result.startsWith("0")) {
+						CommonMsg.save(function() {
+							search();
+						}, data.message);
+					} else if (data.result == "61") {
+						CommonMsg.info(function() { }, data.message);
+					} else {
+						CommonMsg.error(function() { });
+					}
+				},
+				error : function(data) {
+					CommonMsg.error(function() { });
+				},
+				complete : function() {
+				}
+			});
+		});
+	}
+
+	function search() {
+		UserTable.reload('_report_grid');
 	}
 
 	/* ]]> */
