@@ -20,7 +20,7 @@
 	<div class="modal-dialog">
 		<div class="modal-content">
 			<div class="modal-header">
-				<h4 class="modal-title">검체 현황</h4>
+				<h4 class="modal-title">Report 현황</h4>
 				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
 			</div>
 			<div class="modal-body">
@@ -40,28 +40,25 @@
 /* <![CDATA[ */       
 //ajax Data List
 
-function afterPopupOnload(type, bundleId, startDate, endDate) {
+function afterPopupOnload(type, startDate, endDate) {
 	$("#modal-after").modal();
 	
-	UserTable.init('_com_after_popup', true, [10, 50, 100, 200, 500] , [10, 50, 100, 200, 500], true);
-	afterAfterGetItem(type, bundleId, startDate, endDate);
+	UserTable.init('_com_after_popup', true, [10, 50, 100, 200, 500] , [10, 50, 100, 200, 500]);
+	afterAfterGetItem(type, startDate, endDate);
 }
 
-function afterAfterGetItem(type, bundleId, startDate, endDate) {
+function afterAfterGetItem(type, startDate, endDate) {
 	var url = "/popup/registered";
 	if (type == 1) {
-		url = "/popup/analysis";
+		url = "/popup/running";
 	} else if (type == 2) {
 		url = "/popup/completed";
-	} else if (type == 3) {
-		url = "/popup/reported";
 	}
 	UserTable.draw('_com_after_popup', {
 		url : url,
 		type : "GET",
 		data : function() {
 			return {
-				bundleId : bundleId,
 				sDate : startDate,
 				fDate : endDate
 			};
@@ -78,45 +75,25 @@ function afterAfterGetItem(type, bundleId, startDate, endDate) {
 		headClassName : 'width-50',
 		bodyClassName : 'text-center'
 	}, {
-		title : "서비스",
-		data : "bundle.name",
+		title : "Sample ID",
+		data : "sampleId"
 	}, {
-		title : "검사실ID",
-		data : "laboratoryId"
+		title : "File Path",
+		data : "filePath"
 	}, {
-		title : "바코드",
-		data : "items.barcode"
-	}, {
-		title : '상태', 
+		title : "상태",
 		data : "statusCode",
 		render : function(row, data, index) {
-			var value = g_statusCodeInfo[data];
+			var value = "";
+			if (data != null) {
+				value = g_statusCodeInfo[data];
+			}
 			return value;
 		}
 	}, {
-		serverHeader : true
-	}, {
-		title : '검체 채취일', 
-		data : 'collectedDate',
-		type : 'date'
-	}, {
-		title : '검체 수령일', 
-		data : 'receivedDate',
-		type : 'date'
-	}, {
-		title : '검체 종류', 
-		data : 'sampleType'
-	}, {
-		title : "최근수정일자",
-		data : "modifiedDate",
-		type : "date"
-	}, {
-		title : "생성일자",
+		title : "등록일",
 		data : "createdDate",
 		type : "date"
-	}, {
-		title : "생성자",
-		data : "createdMember.name",
 	}]);
 	
 }	

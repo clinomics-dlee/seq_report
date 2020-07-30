@@ -20,9 +20,9 @@ import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 @Entity
-@Table(name="report")
+@Table(name="result")
 @EntityListeners(AuditingEntityListener.class)
-public class Report implements Serializable {
+public class Result implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id

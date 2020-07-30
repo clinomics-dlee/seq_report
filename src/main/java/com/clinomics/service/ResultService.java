@@ -16,11 +16,12 @@ import java.util.zip.ZipInputStream;
 
 import javax.transaction.Transactional;
 
-import com.clinomics.entity.seq.Report;
+import com.clinomics.entity.seq.Result;
+import com.clinomics.entity.seq.Result;
 import com.clinomics.enums.ResultCode;
 import com.clinomics.enums.StatusCode;
-import com.clinomics.repository.seq.ReportRepository;
-import com.clinomics.specification.seq.ReportSpecification;
+import com.clinomics.repository.seq.ResultRepository;
+import com.clinomics.specification.seq.ResultSpecification;
 import com.google.common.collect.Maps;
 
 import org.apache.commons.io.FileUtils;
@@ -38,7 +39,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 @Service
-public class SeqService {
+public class ResultService {
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @Value("${seq.tempFilePath}")
@@ -48,12 +49,12 @@ public class SeqService {
     private String workspacePath;
 
     @Autowired
-    ReportRepository reportRepository;
+    ResultRepository resultRepository;
 
     @Autowired
     DataTableService dataTableService;
 
-    public Map<String, Object> findReportByParams(Map<String, String> params) {
+    public Map<String, Object> findResultByParams(Map<String, String> params) {
         int draw = 1;
         // #. paging param
         int pageNumber = NumberUtils.toInt(params.get("pgNmb") + "", 0);
@@ -71,15 +72,15 @@ public class SeqService {
         }
         long total;
 
-        Specification<Report> where = Specification
-                .where(ReportSpecification.betweenDate(params))
-                .and(ReportSpecification.keywordLike(params))
-                .and(ReportSpecification.statusEqual(statusCode))
-                .and(ReportSpecification.orderBy(params));
+        Specification<Result> where = Specification
+                .where(ResultSpecification.betweenDate(params))
+                .and(ResultSpecification.keywordLike(params))
+                .and(ResultSpecification.statusEqual(statusCode))
+                .and(ResultSpecification.orderBy(params));
         
-        total = reportRepository.count(where);
-        Page<Report> page = reportRepository.findAll(where, pageable);
-        List<Report> list = page.getContent();
+        total = resultRepository.count(where);
+        Page<Result> page = resultRepository.findAll(where, pageable);
+        List<Result> list = page.getContent();
         long filtered = total;
 
         return dataTableService.getDataTableMap(draw, pageNumber, total, filtered, list);
@@ -117,11 +118,11 @@ public class SeqService {
             FileUtils.deleteDirectory(srcDir);
 
             // #. save
-            Report report = new Report();
-            report.setSampleId(rawDataId);
-            report.setFilePath(filePath);
-            report.setStatusCode(StatusCode.S100_PDF_CREATING);
-            reportRepository.save(report);
+            Result result = new Result();
+            result.setSampleId(rawDataId);
+            result.setFilePath(filePath);
+            result.setStatusCode(StatusCode.S100_PDF_CREATING);
+            resultRepository.save(result);
 
             rtn.put("result", ResultCode.SUCCESS.get());
             rtn.put("message", ResultCode.SUCCESS.getMsg());
@@ -136,11 +137,11 @@ public class SeqService {
     @Transactional
 	public Map<String, String> delete(List<Integer> ids) {
 		Map<String, String> rtn = Maps.newHashMap();
-		List<Report> reports = reportRepository.findByIdIn(ids);
+		List<Result> results = resultRepository.findByIdIn(ids);
         
         // #. file 경로 삭제
-        for (Report report : reports) {
-            String path = report.getFilePath();
+        for (Result result : results) {
+            String path = result.getFilePath();
             if (path != null) {
                 File dir = new File(path);
                 if (dir.exists()) {
@@ -153,7 +154,7 @@ public class SeqService {
             }
         }
         
-		reportRepository.deleteAll(reports);
+		resultRepository.deleteAll(results);
 		
 		rtn.put("result", ResultCode.SUCCESS_DELETE.get());
 		rtn.put("message", ResultCode.SUCCESS_DELETE.getMsg());

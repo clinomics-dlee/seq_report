@@ -11,16 +11,16 @@ import javax.persistence.criteria.Expression;
 import javax.persistence.criteria.Order;
 import javax.persistence.criteria.Predicate;
 
-import com.clinomics.entity.seq.Report;
+import com.clinomics.entity.seq.Result;
 import com.clinomics.enums.StatusCode;
 import com.google.common.collect.Lists;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.jpa.domain.Specification;
 
-public class ReportSpecification {
+public class ResultSpecification {
 
-	public static Specification<Report> createdDateOneMonth(Map<String, String> params) {
+	public static Specification<Result> createdDateOneMonth(Map<String, String> params) {
 
 		return (root, query, criteriaBuilder) -> {
 			Predicate rtn = null;
@@ -40,7 +40,7 @@ public class ReportSpecification {
 		};
 	}
 
-	public static Specification<Report> modifiedDateOneMonth(Map<String, String> params) {
+	public static Specification<Result> modifiedDateOneMonth(Map<String, String> params) {
 
 		return (root, query, criteriaBuilder) -> {
 			Predicate rtn = null;
@@ -60,7 +60,7 @@ public class ReportSpecification {
 		};
 	}
 
-	public static Specification<Report> betweenDate(Map<String, String> params) {
+	public static Specification<Result> betweenDate(Map<String, String> params) {
 
 		return (root, query, criteriaBuilder) -> {
 			Predicate rtn = null;
@@ -79,7 +79,7 @@ public class ReportSpecification {
 		};
 	}
 
-	public static Specification<Report> betweenModifiedDate(Map<String, String> params) {
+	public static Specification<Result> betweenModifiedDate(Map<String, String> params) {
 
 		return (root, query, criteriaBuilder) -> {
 			Predicate rtn = null;
@@ -97,7 +97,7 @@ public class ReportSpecification {
 
 		};
 	}
-	public static Specification<Report> keywordLike(Map<String, String> params) {
+	public static Specification<Result> keywordLike(Map<String, String> params) {
 
 		return (root, query, criteriaBuilder) -> {
 			Predicate rtn = null;
@@ -116,7 +116,7 @@ public class ReportSpecification {
 		};
 	}
 
-	public static Specification<Report> statusIn(List<StatusCode> statusCodes) {
+	public static Specification<Result> statusIn(List<StatusCode> statusCodes) {
 		return (root, query, criteriaBuilder) -> {
 
 			Predicate rtn = null;
@@ -129,7 +129,7 @@ public class ReportSpecification {
 		};
 	}
 
-	public static Specification<Report> statusNotIn(List<StatusCode> statusCodes) {
+	public static Specification<Result> statusNotIn(List<StatusCode> statusCodes) {
 		return (root, query, criteriaBuilder) -> {
 			Predicate rtn = null;
 			List<Predicate> predicatesAnds = new ArrayList<>();
@@ -141,7 +141,7 @@ public class ReportSpecification {
 		};
 	}
 
-	public static Specification<Report> statusEqual(StatusCode statusCode) {
+	public static Specification<Result> statusEqual(StatusCode statusCode) {
 		return (root, query, criteriaBuilder) -> {
 			Predicate rtn = null;
 			List<Predicate> predicatesAnds = new ArrayList<>();
@@ -153,7 +153,7 @@ public class ReportSpecification {
 		};
 	}
 
-	public static Specification<Report> statusNotEqual(StatusCode statusCode) {
+	public static Specification<Result> statusNotEqual(StatusCode statusCode) {
 		return (root, query, criteriaBuilder) -> {
 			Predicate rtn = null;
 			List<Predicate> predicatesAnds = new ArrayList<>();
@@ -165,7 +165,7 @@ public class ReportSpecification {
 		};
 	}
 
-	public static Specification<Report> statusCodeGt(int number) {
+	public static Specification<Result> statusCodeGt(int number) {
 		return (root, query, criteriaBuilder) -> {
 			Predicate rtn = criteriaBuilder.greaterThanOrEqualTo(
 					criteriaBuilder.substring(root.get("statusCode"), 2, 3).as(Integer.class), number);
@@ -173,7 +173,7 @@ public class ReportSpecification {
 		};
 	}
 
-	public static Specification<Report> orderBy(Map<String, String> params) {
+	public static Specification<Result> orderBy(Map<String, String> params) {
 		return (root, query, criteriaBuilder) -> {
 			Predicate rtn = null;
 			if (params.containsKey("order") && !params.get("order").isEmpty()) {

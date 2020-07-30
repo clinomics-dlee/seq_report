@@ -18,7 +18,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.clinomics.service.SeqService;
+import com.clinomics.service.ResultService;
 import com.itextpdf.html2pdf.ConverterProperties;
 import com.itextpdf.html2pdf.HtmlConverter;
 import com.itextpdf.html2pdf.resolver.font.DefaultFontProvider;
@@ -42,38 +42,38 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
-@RequestMapping("/seq")
+@RequestMapping("/result")
 @RestController
-public class SeqController {
+public class ResultController {
 	private Logger logger = LoggerFactory.getLogger(this.getClass());
 
 	@Value("${seq.tempFilePath}")
 	private String tempFilePath;
 
 	@Autowired
-	private SeqService seqService;
+	private ResultService resultService;
 
-	@GetMapping("/report/get")
-	public Map<String, Object> getReport(@RequestParam Map<String, String> params) {
-		return seqService.findReportByParams(params);
+	@GetMapping("/get")
+	public Map<String, Object> getResult(@RequestParam Map<String, String> params) {
+		return resultService.findResultByParams(params);
 	}
 
-	@PostMapping("/report/save")
+	@PostMapping("/save")
 	public Map<String, String> save(@RequestParam("file") MultipartFile multipartFile, MultipartHttpServletRequest request)
 			throws InvalidFormatException, IOException {
 		UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		String memberId = userDetails.getUsername();
 		
-		return seqService.save(multipartFile, memberId);
+		return resultService.save(multipartFile, memberId);
 	}
 
-	@PostMapping("/report/delete")
+	@PostMapping("/delete")
 	public Map<String, String> delete(@RequestBody List<Integer> ids) {
-		return seqService.delete(ids);
+		return resultService.delete(ids);
 	}
 
-	@GetMapping("/report/pdf")
-	public void exportReportPdf(@RequestParam Map<String, String> params, HttpServletRequest request,
+	@GetMapping("/pdf")
+	public void exportResultPdf(@RequestParam Map<String, String> params, HttpServletRequest request,
 			HttpServletResponse response) {
 		try {
 			File tempDir = new File(tempFilePath);
@@ -99,14 +99,14 @@ public class SeqController {
 			// #. HTML 을 PDF로 변경
 			HtmlConverter.convertToPdf(is, new FileOutputStream(file), converterProp);
 
-			requestFile(file, "report.pdf", request, response, true);
+			requestFile(file, "result.pdf", request, response, true);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 
-	@GetMapping("/report/html")
-	public void exportReportHtml(@RequestParam Map<String, String> params, HttpServletRequest request,
+	@GetMapping("/html")
+	public void exportResultHtml(@RequestParam Map<String, String> params, HttpServletRequest request,
 			HttpServletResponse response) {
 		try {
 			File tempDir = new File(tempFilePath);
@@ -124,7 +124,7 @@ public class SeqController {
 			};
 			Files.copy(is, file.toPath(), options);
 
-			requestFile(file, "report.html", request, response, true);
+			requestFile(file, "result.html", request, response, true);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

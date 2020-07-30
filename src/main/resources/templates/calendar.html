@@ -51,8 +51,6 @@ xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 		<!-- begin #sidebar -->
 		<th:block th:replace="layout/left"></th:block>
 		<th:block th:replace="popup/cal_after"></th:block>
-		<th:block th:replace="popup/cal_registered"></th:block>
-		<th:block th:replace="popup/cal_human"></th:block>
 		<!-- end #sidebar -->
 		<!-- begin #content -->
 		<div id="content" class="content">
@@ -63,7 +61,7 @@ xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 			</ol> -->
 			<!-- end breadcrumb -->
 			<!-- begin page-header -->
-			<h1 class="page-header">검체 현황</h1>
+			<h1 class="page-header">Report 현황</h1>
 			<!-- end page-header -->
 			
 			<!-- begin fullcalendar-container -->
@@ -72,11 +70,6 @@ xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
                     <div class="panel p-20">
     					<div class="row m-b-5">
 							<div class="row col-md-8">
-								<label class="col-form-label">서비스</label>
-								<select class="form-control width-150 m-r-5 m-b-5" data-parsley-required="true" id="sel_bundle" name="bundleId">
-									<option value="">전체</option>
-									<option th:each="bnd : ${bundles}" th:value="${bnd.getId()}" th:text="${bnd.getName()}"></option>
-								</select>
 								<button class="btn btn-white m-r-5 m-b-5" id="btn_prev">이전</button>
 								<b id="tit_date" style="display:inline-block; width:150px; text-align: center; font-size: 24px; vertical-align: middle;">
 									2020-01-01
@@ -287,6 +280,7 @@ xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 				xhr.setRequestHeader(header, token);
 			},
 			success: function (data) {
+				console.log(data);
 				$("#cal1").addClass('hide');
 				var startWeek = rdate.startOf('month').isoWeekday();
 				startWeek = (startWeek == 7 ? 1 : startWeek + 1);
@@ -299,32 +293,26 @@ xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 					
 					if (loop >= startWeek && endDay >= day && (loop % 8 != 0 || loop == 0)) {
 						
-						val1 = parseInt(data.sample[day]);
-						val2 = parseInt(data.analysis[day]);
+						val1 = parseInt(data.register[day]);
+						val2 = parseInt(data.running[day]);
 						val3 = parseInt(data.complete[day]);
-						val4 = parseInt(data.completePdf[day]);
 						
 						html = '' + day;
 						html += '<div>';
 						if (val1) {
 							w1 += val1; t1 += val1;
-							html += ' <a href="#" onClick="afterPopupOnload(0, \''+ bundleId + '\',' + dayToDate(day, 2) + ')"'
+							html += ' <a href="#" onClick="afterPopupOnload(0,' + dayToDate(day, 2) + ')"'
 								+ ' class="btn bg-blue btn-xs p-l-10 p-r-10 m-b-5">' + val1 + '</a>';
 						}
 						if (val2) {
 							w2 += val2; t2 += val2;
-							html += ' <a href="#" onClick="afterPopupOnload(1, \''+ bundleId + '\',' + dayToDate(day, 2) + ')"'
-								+ ' class="btn bg-info btn-xs p-l-10 p-r-10 m-b-5">' + val2 + '</a>';
+							html += ' <a href="#" onClick="afterPopupOnload(1,' + dayToDate(day, 2) + ')"'
+								+ ' class="btn bg-orange btn-xs p-l-10 p-r-10 m-b-5">' + val2 + '</a>';
 						}
 						if (val3) {
 							w3 += val3; t3 += val3;
-							html += ' <a href="#" onClick="afterPopupOnload(2, \''+ bundleId + '\',' + dayToDate(day, 2) + ')"'
-								+ ' class="btn bg-orange btn-xs p-l-10 p-r-10 m-b-5">' + val3 + '</a>';
-						}
-						if (val4) {
-							w4 += val4; t4 += val4;
-							html += ' <a href="#" onClick="afterPopupOnload(3, \''+ bundleId + '\',' + dayToDate(day, 2) + ')"'
-								+ ' class="btn bg-red btn-xs p-l-10 p-r-10 m-b-5">' + val4 + '</a>';
+							html += ' <a href="#" onClick="afterPopupOnload(2,' + dayToDate(day, 2) + ')"'
+								+ ' class="btn bg-red btn-xs p-l-10 p-r-10 m-b-5">' + val3 + '</a>';
 						}
 						html += '</div>';
 						$(this).append(html);
@@ -332,20 +320,16 @@ xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 					} else if (loop % 8 == 0 && loop != 0) {
 						html = '&nbsp;<div>';
 						if (w1 > 0) {
-							html += ' <a href="#" onClick="afterPopupOnload(0, \''+ bundleId + '\',' + dayToBetweenDate(day - 1, 2) + ')"'
+							html += ' <a href="#" onClick="afterPopupOnload(0,' + dayToBetweenDate(day - 1, 2) + ')"'
 								+ ' class="btn bg-blue btn-xs p-l-10 p-r-10 m-b-5">' + w1 + '</a>';
 						}
 						if (w2 > 0) {
-							html += ' <a href="#" onClick="afterPopupOnload(1, \''+ bundleId + '\',' + dayToBetweenDate(day - 1, 2) + ')"'
-								+ ' class="btn bg-info btn-xs p-l-10 p-r-10 m-b-5">' + w2 + '</a>';
+							html += ' <a href="#" onClick="afterPopupOnload(1,' + dayToBetweenDate(day - 1, 2) + ')"'
+								+ ' class="btn bg-orange btn-xs p-l-10 p-r-10 m-b-5">' + w2 + '</a>';
 						}
 						if (w3 > 0) {
-							html += ' <a href="#" onClick="afterPopupOnload(2, \''+ bundleId + '\',' + dayToBetweenDate(day - 1, 2) + ')"'
-								+ ' class="btn bg-orange btn-xs p-l-10 p-r-10 m-b-5">' + w3 + '</a>';
-						}
-						if (w4 > 0) {
-							html += ' <a href="#" onClick="afterPopupOnload(3, \''+ bundleId + '\',' + dayToBetweenDate(day - 1, 2) + ')"'
-								+ ' class="btn bg-red btn-xs p-l-10 p-r-10 m-b-5">' + w4 + '</a>';
+							html += ' <a href="#" onClick="afterPopupOnload(2,' + dayToBetweenDate(day - 1, 2) + ')"'
+								+ ' class="btn bg-red btn-xs p-l-10 p-r-10 m-b-5">' + w3 + '</a>';
 						}
 						html += '</div>';
 						$(this).append(html);
@@ -353,14 +337,12 @@ xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 					}
 					loop++;
 				});
-				$("#total1").html('<a href="#" onClick="afterPopupOnload(0, \''+ bundleId + '\',' + dayToBetweenDateMonth() + ')"'
+				$("#total1").html('<a href="#" onClick="afterPopupOnload(0,' + dayToBetweenDateMonth() + ')"'
 								+ ' style="color: white;">' + t1 + '</a>');
-				$("#total2").html('<a href="#" onClick="afterPopupOnload(1, \''+ bundleId + '\',' + dayToBetweenDateMonth() + ')"'
+				$("#total2").html('<a href="#" onClick="afterPopupOnload(1,' + dayToBetweenDateMonth() + ')"'
 								+ ' style="color: white;">' + t2 + '</a>');
-				$("#total3").html('<a href="#" onClick="afterPopupOnload(2, \''+ bundleId + '\',' + dayToBetweenDateMonth() + ')"'
+				$("#total3").html('<a href="#" onClick="afterPopupOnload(2,' + dayToBetweenDateMonth() + ')"'
 								+ ' style="color: white;">' + t3 + '</a>');
-				$("#total4").html('<a href="#" onClick="afterPopupOnload(3, \''+ bundleId + '\',' + dayToBetweenDateMonth() + ')"'
-								+ ' style="color: white;">' + t4 + '</a>');
 				$("#cal1").removeClass('hide');
 			},
 			error : function(data) {
@@ -397,25 +379,7 @@ xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 	    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 	}
 	
-	/*
-	{
-                title: "All Day Event",
-                start: e + "-" + n + "-01"
-            }, {
-                title: "Long Event",
-                start: e + "-" + n + "-07",
-                end: e + "-" + n + "-10"
-            
-            }, {
-                title: "Meeting",
-                start: e + "-" + n + "-12T10:30:00",
-                end: e + "-" + n + "-12T12:30:00"
-            }, {
-                title: "Birthday Party",
-                start: e + "-" + n + "-13T07:00:00"
-            }
-	*/
-		/* ]]> */
+	/* ]]> */
 	</script>
 	<form name="searchForm" id="searchForm" method="post">
 		<input type="hidden" name="startDate" id="startDate" value="" />
