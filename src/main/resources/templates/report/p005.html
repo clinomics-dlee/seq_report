@@ -21,28 +21,28 @@
                 </thead>
                 <tbody>
                     <tr>
-                        <td rowspan=2>Joshua</td>
+                        <td rowspan="2" th:text="${customer}"></td>
                         <td>Forward</td>
                         <td>
-                            <img style="width: 1.49in;" src="/assets/img/sample/ri_3.png" />
+                            <img style="width: 1.49in;" th:src="@{${workspace} + '/Forward.per_base_quality.png'}" />
                         </td>
                         <td>
-                            <img style="width: 1.49in;" src="/assets/img/sample/ri_4.png" />
+                            <img style="width: 1.49in;" th:src="@{${workspace} + '/Forward.per_base_sequence_content.png'}" />
                         </td>
                         <td>
-                            <img style="width: 1.49in;" src="/assets/img/sample/ri_2.png" />
+                            <img style="width: 1.49in;" th:src="@{${workspace} + '/Forward.duplication_levels.png'}" />
                         </td>
                     </tr>
                     <tr>
                         <td>Reverse</td>
                         <td>
-                            <img style="width: 1.49in;" src="/assets/img/sample/ri_6.png" />
+                            <img style="width: 1.49in;" th:src="@{${workspace} + '/Reverse.per_base_quality.png'}" />
                         </td>
                         <td>
-                            <img style="width: 1.49in;" src="/assets/img/sample/ri_7.png" />
+                            <img style="width: 1.49in;" th:src="@{${workspace} + '/Reverse.per_base_sequence_content.png'}" />
                         </td>
                         <td>
-                            <img style="width: 1.49in;" src="/assets/img/sample/ri_5.png" />
+                            <img style="width: 1.49in;" th:src="@{${workspace} + '/Reverse.duplication_levels.png'}" />
                         </td>
                     </tr>
                 </tbody>

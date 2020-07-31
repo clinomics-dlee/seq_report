@@ -43,6 +43,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	public void configure(WebSecurity web) throws Exception{
 		web.ignoring().antMatchers("/assets/**");
 		web.ignoring().antMatchers("/report/**");
+		web.ignoring().antMatchers("/workspace/**");
 	}
 	
 	@Override

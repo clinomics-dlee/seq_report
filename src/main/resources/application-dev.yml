@@ -49,10 +49,9 @@ datasource:
 seq:
   filePath: /BiO/Serve/seq_report
   tempFilePath: /BiO/Serve/seq_report/tempFiles
-  celFilePath: /BiO/Serve/seq_report/celFiles
   workspacePath : /BiO/Serve/seq_report/workspace
-  apmraChipPath : /BiO/Research/Cel2GSSInput/Script/runAnalysis_GSK.py
-  customChipPath : /BiO/Research/Cel2GSSInput/Script/runAnalysis.py
+  nodePath : /BiO/Serve/nodejs/node
+  htmlToPdfPath : /BiO/Serve/html_to_pdf/index.js
 externalApi: 
   url: https://api.genosolutiony.com/etc/
   tokenName: apiKey
@@ -71,4 +70,4 @@ rest:
 logging:
   file: /BiO/Serve/seq_report/logs/seq_report.log
 server:
-  port: 9095
+  port: 9096

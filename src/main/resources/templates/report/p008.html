@@ -21,16 +21,18 @@
                 </thead>
                 <tbody>
                     <tr>
-                        <td rowspan=2>Joshua</td>
-                        <td>Forward</td>
-                        <td>336,623,379</td>
-                        <td>48,898,734,355</td>
-                        <td rowspan=2>97.8</td>
+                        <td rowspan="2" th:text="${customer}"></td>
+                        <td th:text="${datas.tableData3[0][1]}"></td>
+                        <td th:text="${datas.tableData3[0][2]}"></td>
+                        <td th:text="${datas.tableData3[0][3]}"></td>
+                        <td th:if="${datas.tableData3[1][4] != ''}" th:text="${datas.tableData3[0][4]}"></td>
+                        <td th:if="${datas.tableData3[1][4] == ''}" rowspan="2" th:text="${datas.tableData3[0][4]}"></td>
                     </tr>
                     <tr>
-                        <td>Reverse</td>
-                        <td>336,623,379</td>
-                        <td>48,899,547,283</td>
+                        <td th:text="${datas.tableData3[1][1]}"></td>
+                        <td th:text="${datas.tableData3[1][2]}"></td>
+                        <td th:text="${datas.tableData3[1][3]}"></td>
+                        <td th:if="${datas.tableData3[1][4] != ''}" th:text="${datas.tableData3[1][4]}"></td>
                     </tr>
                 </tbody>
             </table>
@@ -72,11 +74,11 @@
                 </thead>
                 <tbody>
                     <tr>
-                        <td>Joshua</td>
-                        <td>31.59</td>
-                        <td>90.73</td>
-                        <td>88.27</td>
-                        <td>5.24</td>
+                        <td th:text="${customer}"></td>
+                        <td th:text="${datas.tableData4[0][1]}"></td>
+                        <td th:text="${datas.tableData4[0][2]}"></td>
+                        <td th:text="${datas.tableData4[0][3]}"></td>
+                        <td th:text="${datas.tableData4[0][4]}"></td>
                     </tr>
                 </tbody>
             </table>

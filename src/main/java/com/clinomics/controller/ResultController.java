@@ -18,6 +18,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.clinomics.entity.seq.Result;
 import com.clinomics.service.ResultService;
 import com.itextpdf.html2pdf.ConverterProperties;
 import com.itextpdf.html2pdf.HtmlConverter;
@@ -34,6 +35,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -63,8 +65,9 @@ public class ResultController {
 			throws InvalidFormatException, IOException {
 		UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		String memberId = userDetails.getUsername();
+		String reportUrl = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() + "/report";
 		
-		return resultService.save(multipartFile, memberId);
+		return resultService.save(multipartFile, memberId, reportUrl);
 	}
 
 	@PostMapping("/delete")
@@ -72,59 +75,13 @@ public class ResultController {
 		return resultService.delete(ids);
 	}
 
-	@GetMapping("/pdf")
-	public void exportResultPdf(@RequestParam Map<String, String> params, HttpServletRequest request,
+	@GetMapping("/download/pdf/{id}")
+	public void downloadResultPdf(@PathVariable int id, HttpServletRequest request,
 			HttpServletResponse response) {
 		try {
-			File tempDir = new File(tempFilePath);
-			if (!tempDir.exists()) tempDir.mkdirs();
-
-			File file = File.createTempFile("temp_", ".pdf", tempDir);
-			// #. pdf로 변활할 html가공
-			String domain = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort();
-			String pdfPageAddress = domain + "/pdf/template";
-			InputStream is = new URL(pdfPageAddress).openStream();
-
-			// #. 한글 문자열 문제로 인하여 폰트 지정
-			ConverterProperties converterProp = new ConverterProperties();
-			FontProvider fontProvider = new DefaultFontProvider(false, false, false);
-			fontProvider.addFont(FontProgramFactory.createFont("/static/assets/font/NotoSansKR-Black.otf"));
-			fontProvider.addFont(FontProgramFactory.createFont("/static/assets/font/NotoSansKR-Bold.otf"));
-			fontProvider.addFont(FontProgramFactory.createFont("/static/assets/font/NotoSansKR-Light.otf"));
-			fontProvider.addFont(FontProgramFactory.createFont("/static/assets/font/NotoSansKR-Medium.otf"));
-			fontProvider.addFont(FontProgramFactory.createFont("/static/assets/font/NotoSansKR-Regular.otf"));
-			fontProvider.addFont(FontProgramFactory.createFont("/static/assets/font/NotoSansKR-Thin.otf"));
-			converterProp.setFontProvider(fontProvider);
-
-			// #. HTML 을 PDF로 변경
-			HtmlConverter.convertToPdf(is, new FileOutputStream(file), converterProp);
-
-			requestFile(file, "result.pdf", request, response, true);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-
-	@GetMapping("/html")
-	public void exportResultHtml(@RequestParam Map<String, String> params, HttpServletRequest request,
-			HttpServletResponse response) {
-		try {
-			File tempDir = new File(tempFilePath);
-			if (!tempDir.exists()) tempDir.mkdirs();
-
-			File file = File.createTempFile("temp_", ".html", tempDir);
-
-			// #. pdf로 변활할 html가공
-			String domain = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort();
-			String pdfPageAddress = domain + "/pdf/template";
-			InputStream is = new URL(pdfPageAddress).openStream();
-
-			CopyOption[] options = new CopyOption[] {
-				StandardCopyOption.REPLACE_EXISTING // 대상파일이 있어도 덮어쓴다
-			};
-			Files.copy(is, file.toPath(), options);
-
-			requestFile(file, "result.html", request, response, true);
+			Result result = resultService.findResultById(id);
+			File file = new File(result.getFilePath() + "/Result.pdf");
+			requestFile(file, "Result.pdf", request, response, false);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

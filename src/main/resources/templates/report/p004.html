@@ -19,12 +19,12 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr>
-                        <td>Joshua</td>
-                        <td>E100003072_L01_43</td>
-                        <td>Homo sapiens</td>
-                        <td>Human</td>
-                        <td>WGRS</td>
+                    <tr th:each="values, i: ${datas.tableData0}">
+                        <td th:text="${values[1]}"></td>
+                        <td th:text="${values[2]}"></td>
+                        <td th:text="${values[3]}"></td>
+                        <td th:text="${values[4]}"></td>
+                        <td th:text="${values[5]}"></td>
                     </tr>
                 </tbody>
             </table>

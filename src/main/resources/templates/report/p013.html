@@ -20,10 +20,10 @@
                 </thead>
                 <tbody>
                     <tr>
-                        <td>Joshua</td>
-                        <td>3,806</td>
-                        <td>746</td>
-                        <td>155</td>
+                        <td th:text="${customer}"></td>
+                        <td th:text="${datas.tableData7[0][1]}"></td>
+                        <td th:text="${datas.tableData7[0][2]}"></td>
+                        <td th:text="${datas.tableData7[0][3]}"></td>
                     </tr>
                 </tbody>
             </table>
@@ -39,7 +39,7 @@
             <h2>
                 5.8 Structural variations length distribution
             </h2>
-            <img src="/assets/img/sample/ri_13.png" />
+            <img th:src="@{${workspace} + '/sv_length_distribution.png'}" />
         </div>
         
         <div class="footer">
