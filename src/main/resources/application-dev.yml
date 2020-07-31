@@ -50,7 +50,7 @@ seq:
   filePath: /BiO/Serve/seq_report
   tempFilePath: /BiO/Serve/seq_report/tempFiles
   workspacePath : /BiO/Serve/seq_report/workspace
-  nodePath : /BiO/Serve/nodejs/node
+  nodePath : node
   htmlToPdfPath : /BiO/Serve/html_to_pdf/index.js
 externalApi: 
   url: https://api.genosolutiony.com/etc/
