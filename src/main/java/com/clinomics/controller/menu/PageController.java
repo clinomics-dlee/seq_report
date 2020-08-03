@@ -35,12 +35,7 @@ public class PageController {
 
 	@GetMapping()
 	public String calendar(Model model) {
-		Map<String, String> statusCodeMap = Maps.newLinkedHashMap();
-		for (StatusCode statusCode : StatusCode.values()) {
-			statusCodeMap.put(statusCode.getKey(), statusCode.getValue());
-		}
-		model.addAttribute("statusCodes", statusCodeMap);
-		return "calendar";
+		return "redirect:/p/result/list";
 	}
 
 	@GetMapping("/chart")
@@ -68,19 +63,6 @@ public class PageController {
 			statusCodeMap.put(statusCode.getKey(), statusCode.getValue());
 		}
 		model.addAttribute("statusCodes", statusCodeMap);
-
-		Map<String, String> genotypingMethodCodeMap = Maps.newHashMap();
-		for (GenotypingMethodCode code : GenotypingMethodCode.values()) {
-			genotypingMethodCodeMap.put(code.getKey(), code.getValue());
-		}
-
-		Map<String, String> chipTypeCodeMap = Maps.newHashMap();
-		for (ChipTypeCode code : ChipTypeCode.values()) {
-			chipTypeCodeMap.put(code.getKey(), code.getValue());
-		}
-		model.addAttribute("statusCodes", statusCodeMap);
-		model.addAttribute("genotypingMethodCodes", genotypingMethodCodeMap);
-		model.addAttribute("chipTypeCodes", chipTypeCodeMap);
 		return path1 + "/" + path2;
 	}
 

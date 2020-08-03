@@ -213,14 +213,20 @@ xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 			title : " ",
 			data : "id",
 			render : function(row, data, index) {
-				var value = '<a href="javascript:downloadPdf(\'' + data + '\')" class="btn btn-sm btn-primary width-60 m-r-2">PDF</a>';
+				var value = '';
+				if (row.statusCode == "S110_PDF_CMPL") {
+					value = '<a href="javascript:downloadPdf(\'' + data + '\')" class="btn btn-sm btn-primary width-60 m-r-2">PDF</a>';
+				}
 				return value;
 			}
 		}, {
 			title : " ",
 			data : "filePath",
 			render : function(row, data, index) {
-				var value = '<a href="/report?filePath=' + data + '" target="_blank" class="btn btn-sm btn-primary width-60 m-r-2">HTML</a>';
+				var value = '';
+				if (row.statusCode == "S110_PDF_CMPL") {
+					value = '<a href="/report?filePath=' + data + '" target="_blank" class="btn btn-sm btn-primary width-60 m-r-2">HTML</a>';
+				}
 				return value;
 			}
 		}, {

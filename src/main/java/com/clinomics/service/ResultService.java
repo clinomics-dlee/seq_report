@@ -7,9 +7,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -23,6 +21,7 @@ import com.clinomics.entity.seq.Result;
 import com.clinomics.enums.ResultCode;
 import com.clinomics.enums.StatusCode;
 import com.clinomics.repository.seq.ResultRepository;
+import com.clinomics.service.async.PdfService;
 import com.clinomics.specification.seq.ResultSpecification;
 import com.google.common.collect.Maps;
 
@@ -61,6 +60,9 @@ public class ResultService {
 
     @Autowired
     DataTableService dataTableService;
+
+    @Autowired
+    PdfService pdfService;
 
     public Result findResultById(int id) {
         Optional<Result> oResult = resultRepository.findById(id);
@@ -128,42 +130,11 @@ public class ResultService {
             // #. 복사
             FileUtils.copyDirectory(srcDir, destDir);
 
-            // // #. 파일 목록중 pdf파일 image로 변환
-            // File pdfFile = new File(filePath + "/insert_size_histogram.pdf");
-            // PDDocument pdfDoc = PDDocument.load(pdfFile); //Document 생성
-            // PDFRenderer pdfRenderer = new PDFRenderer(pdfDoc);
-
-            // Files.createDirectories(Paths.get(filePath));
-
-            // String imgFileName = filePath + "/insert_size_histogram.png";
-            // ImageIOUtil.writeImage(pdfRenderer.renderImageWithDPI(0, 300, ImageType.RGB), imgFileName , 300);
-            
-            // pdfDoc.close(); //모두 사용한 PDF 문서는 닫는다.
-
             // #. 임시 폴더 삭제
             FileUtils.deleteDirectory(srcDir);
 
-            // #. pdf생성 호출
-            List<String> commands = new ArrayList<String>();
-            commands.add(nodePath);
-            commands.add(htmlToPdfPath);
-            commands.add(reportUrl);
-            commands.add(filePath);
-			logger.info("★★★★★★★★★★★ commands=" + commands.toString());
-			ProcessBuilder processBuilder = new ProcessBuilder(commands);
-			processBuilder.redirectErrorStream(true);
-			Process process = processBuilder.start();
-			
-			// #. 명령어 실행 표준 및 오류 처리
-			BufferedReader standardErrorBr = new BufferedReader(new InputStreamReader(process.getInputStream()));
-			StringBuilder standardErrorSb = new StringBuilder();
-			String lineString = null;
-			while ((lineString = standardErrorBr.readLine()) != null) {
-				standardErrorSb.append(lineString);
-				standardErrorSb.append("<br>");
-            }
-            
-            logger.info("★★★★★★★★★★★ standardErrorSb=" + standardErrorSb.toString());
+            // #. pdf 생성
+            pdfService.createPdf(reportUrl, filePath);
 
             // #. save
             Result result = new Result();
