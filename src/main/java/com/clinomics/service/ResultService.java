@@ -121,6 +121,16 @@ public class ResultService {
             String[] lines = outString.split("\n");
             String[] values = lines[2].split("\t");
             String rawDataId = values[2];
+
+            List<Result> samples = resultRepository.findBySampleId(rawDataId);
+            if (samples.size() > 0) {
+                // #. 임시 폴더 삭제
+                FileUtils.deleteDirectory(srcDir);
+
+                rtn.put("result", ResultCode.FAIL_UPLOAD.get());
+                rtn.put("message", ResultCode.FAIL_UPLOAD.getMsg());
+                return rtn;
+            }
             
             // #. workspace를 생성
             String filePath = workspacePath + "/" + rawDataId;

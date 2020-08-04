@@ -9,4 +9,5 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 
 public interface ResultRepository extends JpaRepository<Result, Integer>, JpaSpecificationExecutor<Result> {
     List<Result> findByIdIn(List<Integer> id);
+    List<Result> findBySampleId(String sampleId);
 }
