@@ -37,7 +37,7 @@ public class HtmlController {
 	@Value("${seq.workspacePath}")
     private String workspacePath;
 	
-	@GetMapping("/download/html/{id}")
+	@GetMapping("/result/download/html/{id}")
 	public ResponseEntity<Resource> getTestPage(@PathVariable int id
 		, HttpServletRequest request, HttpServletResponse response) {
 		
