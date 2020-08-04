@@ -221,11 +221,11 @@ xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 			}
 		}, {
 			title : " ",
-			data : "filePath",
+			data : "id",
 			render : function(row, data, index) {
 				var value = '';
 				if (row.statusCode == "S110_PDF_CMPL") {
-					value = '<a href="/report?filePath=' + data + '" target="_blank" class="btn btn-sm btn-primary width-60 m-r-2">HTML</a>';
+					value = '<a href="javascript:downloadHtml(\'' + data + '\')" class="btn btn-sm btn-primary width-60 m-r-2">HTML</a>';
 				}
 				return value;
 			}
@@ -293,6 +293,10 @@ xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 
 	function downloadPdf(id) {
 		window.open("/result/download/pdf/" + id, "_blank");
+	}
+
+	function downloadHtml(id) {
+		window.open("/result/download/html/" + id, "_blank");
 	}
 
 	/* ]]> */
