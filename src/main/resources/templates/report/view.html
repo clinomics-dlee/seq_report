@@ -25,7 +25,6 @@
 		a {
 			color: rgba(0,51,102,1);
 			text-decoration: none;
-			text-transform: uppercase;
 			display: inline-block;
 			padding: 2px;
 		}
@@ -300,7 +299,8 @@
 	
 </body>
 
-<script>
+<script th:inline="javascript">
+/*<![CDATA[*/
 	var before = "01";
 	function pageView(id) {
 		var nd = document.getElementById("p" + id);
@@ -313,6 +313,7 @@
 		oa.classList.remove("active");
 		before = id;
 	}
+/*]]>*/
 </script>
 
 </html>

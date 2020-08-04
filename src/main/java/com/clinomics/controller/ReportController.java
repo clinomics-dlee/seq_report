@@ -22,10 +22,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.thymeleaf.context.Context;
 import org.thymeleaf.context.WebContext;
 import org.thymeleaf.spring5.SpringTemplateEngine;
 import org.thymeleaf.templateresolver.ClassLoaderTemplateResolver;
@@ -56,55 +53,5 @@ public class ReportController {
 		model.addAttribute("workspace", info.get("workspace"));
 
 		return "report/print";
-	}
-
-	@GetMapping("/report/test")
-	public ResponseEntity<Resource> getTestPage(@RequestParam Map<String, String> params
-		, HttpServletRequest request, HttpServletResponse response) {
-
-		String filePath = params.get("filePath");
-		SpringTemplateEngine templateEngine = new SpringTemplateEngine();
-		ClassLoaderTemplateResolver templateResolver = new ClassLoaderTemplateResolver();
-        templateResolver.setPrefix("templates/");
-        templateResolver.setCacheable(false);
-        templateResolver.setSuffix(".html");
-        templateResolver.setTemplateMode("HTML5");
-
-		templateEngine.setTemplateResolver(templateResolver);
-		
-		final WebContext ctx = new WebContext(request, response, request.getServletContext());
-		Map<String, Object> info = reportService.getReportInfo(filePath);
-
-		ctx.setVariable("datas", info.get("datas"));
-		ctx.setVariable("customer", info.get("customer"));
-		ctx.setVariable("service", info.get("service"));
-		ctx.setVariable("filePath", info.get("filePath"));
-		ctx.setVariable("workspace", filePath);
-
-		String result = templateEngine.process("report/view", ctx);
-
-		result = reportService.imageToBase64String(result);
-		
-		InputStream targetStream = new ByteArrayInputStream(result.getBytes());
-		InputStreamResource resource = new InputStreamResource(targetStream);
-
-		HttpHeaders header = new HttpHeaders();
-        header.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=test.html");
-        header.add("Cache-Control", "no-cache, no-store, must-revalidate");
-        header.add("Pragma", "no-cache");
-		header.add("Expires", "0");
-		
-		return ResponseEntity.ok()
-				.headers(header)
-				.contentLength(result.getBytes().length)
-				.contentType(MediaType.APPLICATION_OCTET_STREAM)
-				.body(resource);
-		
-	}
-
-	@GetMapping("/report/{page}")
-	public String getReportPage(@PathVariable String page, Model model) {
-
-		return "report/" + page;
 	}
 }
