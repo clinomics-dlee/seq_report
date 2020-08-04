@@ -1,85 +1,81 @@
-    <div class="page">
-        <div id="pdf_wrap">
-            <div class="header">
-                <h1 style="color: white;"><b>General Information</b></h1>
-            </div>
-
-            <div class="content">
-                <h1>
-                    5. Variant statistics
-                </h1>
-                <h2>
-                    5.1 SNV & Indel results
-                </h2>
-        
-                <table class="type09" style="width: 100%;">
-                    <thead>
-                        <tr>
-                            <th>Sample ID</th>
-                            <th>Total variants</th>
-                            <th># of SNV</th>
-                            <th># of INS</th>
-                            <th># of DEL</th>
-                            <th># of MNP</th>
-                            <th># of MIXED</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td th:text="${customer}"></td>
-                            <td align="right" th:text="${datas.tableData5[0][1]}"></td>
-                            <td align="right" th:text="${datas.tableData5[0][2]}"></td>
-                            <td align="right" th:text="${datas.tableData5[0][3]}"></td>
-                            <td align="right" th:text="${datas.tableData5[0][4]}"></td>
-                            <td align="right" th:text="${datas.tableData5[0][5]}"></td>
-                            <td align="right" th:text="${datas.tableData5[0][6]}"></td>
-                        </tr>
-                    </tbody>
-                </table>
-        
-                <ul style="margin-left: 30px;">
-                    <li>Sample ID: ID provided by customer</li>
-                    <li>Total variant positions : Total variant positions</li>
-                    <li>SNV : Single nucleotide variation (ex. Reference = 'A', Sample = 'C')</li>
-                    <li>INS : Insertion (ex. Reference = 'A', Sample = 'AGT')</li>
-                    <li>DEL : Deletion (ex. Reference = 'AC', Sample = 'C')</li>
-                    <li>MNP : Multiple nucleotide polymorphism. (ex. Reference = 'ATA', Sample = 'GTC')</li>
-                    <li>MIXED : Multiple-nucleotide and an InDel (ex. Reference = 'ATA', Sample = 'GTCAGT')</li>
-                </ul>
-
-                <h2>
-                    5.2 Transitions / Transversions (Ts/Tv)
-                </h2>
-        
-                <table class="type09" style="width: 100%;">
-                    <thead>
-                        <tr>
-                            <th>Sample ID</th>
-                            <th>Transitions</th>
-                            <th>Transversions</th>
-                            <th>Ts/Tv ratio</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td th:text="${customer}"></td>
-                            <td align="right" th:text="${datas.tableData6[0][1]}"></td>
-                            <td align="right" th:text="${datas.tableData6[0][2]}"></td>
-                            <td align="right" th:text="${datas.tableData6[0][3]}"></td>
-                        </tr>
-                    </tbody>
-                </table>
-        
-                <ul style="margin-left: 30px;">
-                    <li>Sample ID: ID provided by customer</li>
-                    <li>Transitions : Interchanges of purines (A,G) or of pyrimidines (C,T)</li>
-                    <li>Transversions : Interchanges of purine for pyrimidine bases</li>
-                    <li>Ts/Tv ratio : Transitions / Transversions</li>
-                </ul>
-            </div>
-            
-            <div class="footer">
-                <span>9</span>
-            </div>
+        <div class="header">
+            <h1 style="color: white;"><b>General Information</b></h1>
         </div>
-    </div>    
+
+        <div class="content">
+            <h1>
+                5. Variant statistics
+            </h1>
+            <h2>
+                5.1 SNV & Indel results
+            </h2>
+    
+            <table class="type09" style="width: 100%;">
+                <thead>
+                    <tr>
+                        <th>Sample ID</th>
+                        <th>Total variants</th>
+                        <th># of SNV</th>
+                        <th># of INS</th>
+                        <th># of DEL</th>
+                        <th># of MNP</th>
+                        <th># of MIXED</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td th:text="${customer}"></td>
+                        <td align="right" th:text="${datas.tableData5[0][1]}"></td>
+                        <td align="right" th:text="${datas.tableData5[0][2]}"></td>
+                        <td align="right" th:text="${datas.tableData5[0][3]}"></td>
+                        <td align="right" th:text="${datas.tableData5[0][4]}"></td>
+                        <td align="right" th:text="${datas.tableData5[0][5]}"></td>
+                        <td align="right" th:text="${datas.tableData5[0][6]}"></td>
+                    </tr>
+                </tbody>
+            </table>
+    
+            <ul style="margin-left: 30px;">
+                <li>Sample ID: ID provided by customer</li>
+                <li>Total variant positions : Total variant positions</li>
+                <li>SNV : Single nucleotide variation (ex. Reference = 'A', Sample = 'C')</li>
+                <li>INS : Insertion (ex. Reference = 'A', Sample = 'AGT')</li>
+                <li>DEL : Deletion (ex. Reference = 'AC', Sample = 'C')</li>
+                <li>MNP : Multiple nucleotide polymorphism. (ex. Reference = 'ATA', Sample = 'GTC')</li>
+                <li>MIXED : Multiple-nucleotide and an InDel (ex. Reference = 'ATA', Sample = 'GTCAGT')</li>
+            </ul>
+
+            <h2>
+                5.2 Transitions / Transversions (Ts/Tv)
+            </h2>
+    
+            <table class="type09" style="width: 100%;">
+                <thead>
+                    <tr>
+                        <th>Sample ID</th>
+                        <th>Transitions</th>
+                        <th>Transversions</th>
+                        <th>Ts/Tv ratio</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td th:text="${customer}"></td>
+                        <td align="right" th:text="${datas.tableData6[0][1]}"></td>
+                        <td align="right" th:text="${datas.tableData6[0][2]}"></td>
+                        <td align="right" th:text="${datas.tableData6[0][3]}"></td>
+                    </tr>
+                </tbody>
+            </table>
+    
+            <ul style="margin-left: 30px;">
+                <li>Sample ID: ID provided by customer</li>
+                <li>Transitions : Interchanges of purines (A,G) or of pyrimidines (C,T)</li>
+                <li>Transversions : Interchanges of purine for pyrimidine bases</li>
+                <li>Ts/Tv ratio : Transitions / Transversions</li>
+            </ul>
+        </div>
+        
+        <div class="footer">
+            <span>9</span>
+        </div>

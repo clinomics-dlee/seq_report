@@ -19,6 +19,23 @@
 			width: 210mm;
 			height: 297.13mm;
 		}
+		.hide {
+			display: none;
+		}
+		a {
+			color: rgba(0,51,102,1);
+			text-decoration: none;
+			text-transform: uppercase;
+			display: inline-block;
+			padding: 2px;
+		}
+		a:hover {
+			text-decoration: underline;
+		}
+		a.active {
+			background-color: rgba(0,51,102,1);
+			color: white;
+		}
 		div.header {
 			position: absolute;
 			top: 0.00in;
@@ -221,46 +238,81 @@
 </head>
 
 <body>
-	<div class="page">
-		<th:block th:replace="report/p001"></th:block>
+	<div style="position: absolute; left: 5px; border-right: 2px solid #999; height: 100%; width: 80px; padding: 20px 0 0 10px;">
+		
+			<a id="a01" class="active" href="javascript:pageView('01')">Page 1</a><br>
+			<a id="a02" href="javascript:pageView('02')">Page 2</a><br>
+			<a id="a03" href="javascript:pageView('03')">Page 3</a><br>
+			<a id="a04" href="javascript:pageView('04')">Page 4</a><br>
+			<a id="a05" href="javascript:pageView('05')">Page 5</a><br>
+			<a id="a06" href="javascript:pageView('06')">Page 6</a><br>
+			<a id="a07" href="javascript:pageView('07')">Page 7</a><br>
+			<a id="a08" href="javascript:pageView('08')">Page 8</a><br>
+			<a id="a09" href="javascript:pageView('09')">Page 9</a><br>
+			<a id="a10" href="javascript:pageView('10')">Page 10</a><br>
+			<a id="a11" href="javascript:pageView('11')">Page 11</a><br>
+			<a id="a12" href="javascript:pageView('12')">Page 12</a><br>
+			<a id="a13" href="javascript:pageView('13')">Page 13</a><br>
+		
 	</div>
-	<div class="page">
-		<th:block th:replace="report/p002"></th:block>
-	</div>
-	<div class="page">
-		<th:block th:replace="report/p003"></th:block>
-	</div>
-	<div class="page">
-		<th:block th:replace="report/p004"></th:block>
-	</div>
-	<div class="page">
-		<th:block th:replace="report/p005"></th:block>
-	</div>
-	<div class="page">
-		<th:block th:replace="report/p006"></th:block>
-	</div>
-	<div class="page">
-		<th:block th:replace="report/p007"></th:block>
-	</div>
-	<div class="page">
-		<th:block th:replace="report/p008"></th:block>
-	</div>
-	<div class="page">
-		<th:block th:replace="report/p009"></th:block>
-	</div>
-	<div class="page">
-		<th:block th:replace="report/p010"></th:block>
-	</div>
-	<div class="page">
-		<th:block th:replace="report/p011"></th:block>
-	</div>
-	<div class="page">
-		<th:block th:replace="report/p012"></th:block>
-	</div>
-	<div class="page">
-		<th:block th:replace="report/p013"></th:block>
+	<div style="position: absolute; left: 97px; overflow: auto; height: 100%;">
+		<div id="p01" class="page">
+			<th:block th:replace="report/p001"></th:block>
+		</div>
+		<div id="p02" class="page hide">
+			<th:block th:replace="report/p002"></th:block>
+		</div>
+		<div id="p03" class="page hide">
+			<th:block th:replace="report/p003"></th:block>
+		</div>
+		<div id="p04" class="page hide">
+			<th:block th:replace="report/p004"></th:block>
+		</div>
+		<div id="p05" class="page hide">
+			<th:block th:replace="report/p005"></th:block>
+		</div>
+		<div id="p06" class="page hide">
+			<th:block th:replace="report/p006"></th:block>
+		</div>
+		<div id="p07" class="page hide">
+			<th:block th:replace="report/p007"></th:block>
+		</div>
+		<div id="p08" class="page hide">
+			<th:block th:replace="report/p008"></th:block>
+		</div>
+		<div id="p09" class="page hide">
+			<th:block th:replace="report/p009"></th:block>
+		</div>
+		<div id="p10" class="page hide">
+			<th:block th:replace="report/p010"></th:block>
+		</div>
+		<div id="p11" class="page hide">
+			<th:block th:replace="report/p011"></th:block>
+		</div>
+		<div id="p12" class="page hide">
+			<th:block th:replace="report/p012"></th:block>
+		</div>
+		<div id="p13" class="page hide">
+			<th:block th:replace="report/p013"></th:block>
+		</div>
 	</div>
 	
+	
 </body>
+
+<script>
+	var before = "01";
+	function pageView(id) {
+		var nd = document.getElementById("p" + id);
+		var na = document.getElementById("a" + id);
+		var od = document.getElementById("p" + before);
+		var oa = document.getElementById("a" + before);
+		na.classList.add("active");
+		nd.classList.remove("hide");
+		od.classList.add("hide");
+		oa.classList.remove("active");
+		before = id;
+	}
+</script>
 
 </html>

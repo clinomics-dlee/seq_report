@@ -81,7 +81,7 @@ public class ReportController {
 		ctx.setVariable("filePath", info.get("filePath"));
 		ctx.setVariable("workspace", filePath);
 
-		String result = templateEngine.process("report/print", ctx);
+		String result = templateEngine.process("report/view", ctx);
 
 		result = reportService.imageToBase64String(result);
 		

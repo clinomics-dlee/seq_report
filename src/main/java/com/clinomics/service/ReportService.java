@@ -122,10 +122,8 @@ public class ReportService {
             String replacement = "";
 			try {
 				File file = new File(filePathName);
-				logger.info(filePathName);
 
 				if (file.exists()) {
-					logger.info("filePathName exists");
 					inputStream = new FileInputStream(file);
 					byteOutStream = new ByteArrayOutputStream();
 
